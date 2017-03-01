@@ -3,5 +3,78 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:minWidth="25px"
+    android:minHeight="25px"
+    android:background="#A5FEFA">
+    <HorizontalScrollView
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/horizontalScrollView1" />
+    <GridView
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/gridView1" />
+    <SlidingDrawer
+        android:content="@+id/content"
+        android:handle="@+id/handle"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:topOffset="280dip"
+        android:id="@+id/slidingDrawer1">
+        <ImageView
+            android:id="@+id/handle"
+            android:src="@drawable/slider"
+            android:layout_width="wrap_content"
+            android:layout_height="30dip"
+            android:layout_margin="0dip" />
+        <LinearLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <ListView
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/consoleOpt"
+                android:background="#6CA870"
+                android:foreground="#FFFFFF" />
+            <LinearLayout
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/consoleIpt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:imeOptions="actionDone"
+                    android:background="#59955C"
+                    android:textColor="#FFFFFF"
+                    android:inputType="text"
+                    android:textSize="18dip"
+                    android:layout_weight="1"
+                    android:layout_margin="0dip" />
+                <Button
+                    android:id="@+id/consoleSummit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Done"
+                    android:background="#FFE920"
+                    android:layout_weight="5"
+                    android:textColor="#000000"
+                    android:textSize="18dip"
+                    android:layout_margin="0dip" />
+            </LinearLayout>
+        </LinearLayout>
+    </SlidingDrawer>
 </LinearLayout>
