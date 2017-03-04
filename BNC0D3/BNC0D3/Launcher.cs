@@ -21,7 +21,12 @@ namespace BNC0D3
             SetContentView(Resource.Layout.Launcher);
             Button playbtn = (Button)FindViewById(Resource.Id.playbtn);
             Button exitbtn = (Button)FindViewById(Resource.Id.exitbtn);
-            playbtn.Click += delegate { StartActivity(typeof(MainActivity)); };
+            playbtn.Click += delegate {
+                StartActivity(typeof(MainActivity));
+                OverridePendingTransition(Android.Resource.Animation.SlideInLeft, Android.Resource.Animation.SlideOutRight);
+                
+            };
+            
             exitbtn.Click += delegate { Finish(); };
 
         }

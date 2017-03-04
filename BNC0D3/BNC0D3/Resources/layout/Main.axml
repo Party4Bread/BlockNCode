@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:minWidth="25px"
+    android:baselineAligned="false"
     android:minHeight="25px"
     android:background="#A5FEFA">
     <HorizontalScrollView
@@ -11,13 +12,59 @@
         android:minHeight="25px"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/horizontalScrollView1" />
-    <GridView
+        android:id="@+id/horizontalScrollView1"
+        android:background="#62D0FF">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_margin="5dip">
+            <Button
+                android:text="선언"
+                android:textSize="25dip"
+                android:layout_width="70dip"
+                android:layout_height="70dip"
+                android:minWidth="70dip"
+                android:id="@+id/def_button"
+                android:layout_margin="5dip"
+                android:background="#800080"
+                android:textColor="#FFFFFF" />
+            <Button
+                android:text="연산"
+                android:textSize="25dip"
+                android:layout_width="70dip"
+                android:layout_height="70dip"
+                android:minWidth="70dip"
+                android:id="@+id/calc_button"
+                android:layout_margin="5dip"
+                android:background="#892EE4"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+    </HorizontalScrollView>
+    <RelativeLayout
         android:minWidth="25px"
         android:minHeight="25px"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/gridView1" />
+        android:layout_height="300dip"
+        android:id="@+id/relativeLayout1">
+        <ScrollView
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView1">
+            <GridLayout
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/gridView1"
+                android:columnCount="5"
+                android:rowCount="5" />
+        </ScrollView>
+    </RelativeLayout>
     <SlidingDrawer
         android:content="@+id/content"
         android:handle="@+id/handle"
@@ -25,7 +72,7 @@
         android:minHeight="25px"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:topOffset="280dip"
+        android:clipChildren="false"
         android:id="@+id/slidingDrawer1">
         <ImageView
             android:id="@+id/handle"

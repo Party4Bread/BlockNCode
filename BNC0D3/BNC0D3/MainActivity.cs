@@ -3,16 +3,23 @@ using Android.Widget;
 using Android.OS;
 using System.Collections.Generic;
 using System;
+using Android.Graphics;
 
 namespace BNC0D3
 {
     [Activity(Label = "BNC0D3", WindowSoftInputMode = Android.Views.SoftInput.AdjustPan|Android.Views.SoftInput.StateVisible, Theme = "@android:style/Theme.NoTitleBar")]
     public class MainActivity : Activity
     {
-        ArrayAdapter<string> m_Adapter;
-        EditText conIpt;
-        ListView conOpt;
-        Button consumit;
+        private ArrayAdapter<string> m_Adapter;
+        private EditText conIpt;
+        private ListView conOpt;
+        private Button consumit;
+        private Button defbtn;
+        private Button calcbtn;
+        private SlidingDrawer slider;
+
+        public GridLayout gridflow { get; private set; }
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -21,17 +28,44 @@ namespace BNC0D3
             conOpt = (ListView)FindViewById(Resource.Id.consoleOpt);
             conIpt = (EditText)FindViewById(Resource.Id.consoleIpt);
             consumit = (Button)FindViewById(Resource.Id.consoleSummit);
+            defbtn = (Button)FindViewById(Resource.Id.def_button);
+            calcbtn = (Button)FindViewById(Resource.Id.calc_button);
+            gridflow = (GridLayout)FindViewById(Resource.Id.gridView1);
+            //preset
             m_Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1);
             conOpt.Adapter = m_Adapter;
             conIpt.ImeOptions = Android.Views.InputMethods.ImeAction.Done;
+            //events
             conIpt.EditorAction += conIpt_editeract;
+
             consumit.Click += delegate {
                 //VTvm.vm.io.read(conIpt.Text);
                 m_Adapter.Add(conIpt.Text);
                 conIpt.Text = "";
             };
-        }
 
+            defbtn.Click += delegate {
+                Button defflow = new Button(this)
+                {
+                    Text = "선언",
+                    Tag = ""
+                };
+                defflow.SetTextColor(Color.Rgb(0, 0, 0));
+                defflow.SetBackgroundColor(Color.Rgb(128, 0, 128));
+                defflow.SetMinHeight(diptppx(72));
+                defflow.SetMinWidth(diptppx(72));
+                defflow.SetTextSize(Android.Util.ComplexUnitType.Dip, 25);
+                gridflow.AddView(defflow);
+            };
+            calcbtn.Click += delegate {
+
+            };
+
+        }
+        int diptppx(int dip)
+        { 
+            return (int)((dip) * Resources.DisplayMetrics.Density); ;
+        }
         private void conIpt_editeract(object sender, TextView.EditorActionEventArgs e)
         {
             if (e.ActionId == Android.Views.InputMethods.ImeAction.Done)
