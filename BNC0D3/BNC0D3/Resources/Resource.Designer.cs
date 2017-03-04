@@ -71,17 +71,17 @@ namespace BNC0D3
 			// aapt resource value: 0x7f050005
 			public const int calc_button = 2131034117;
 			
-			// aapt resource value: 0x7f05000d
-			public const int consoleIpt = 2131034125;
-			
 			// aapt resource value: 0x7f05000c
-			public const int consoleOpt = 2131034124;
+			public const int consoleIpt = 2131034124;
 			
-			// aapt resource value: 0x7f05000e
-			public const int consoleSummit = 2131034126;
+			// aapt resource value: 0x7f05000b
+			public const int consoleOpt = 2131034123;
 			
-			// aapt resource value: 0x7f050009
-			public const int content = 2131034121;
+			// aapt resource value: 0x7f05000d
+			public const int consoleSummit = 2131034125;
+			
+			// aapt resource value: 0x7f050008
+			public const int content = 2131034120;
 			
 			// aapt resource value: 0x7f050004
 			public const int def_button = 2131034116;
@@ -89,11 +89,11 @@ namespace BNC0D3
 			// aapt resource value: 0x7f050002
 			public const int exitbtn = 2131034114;
 			
-			// aapt resource value: 0x7f050008
-			public const int gridView1 = 2131034120;
+			// aapt resource value: 0x7f050007
+			public const int gridView1 = 2131034119;
 			
-			// aapt resource value: 0x7f05000a
-			public const int handle = 2131034122;
+			// aapt resource value: 0x7f050009
+			public const int handle = 2131034121;
 			
 			// aapt resource value: 0x7f050003
 			public const int horizontalScrollView1 = 2131034115;
@@ -105,13 +105,10 @@ namespace BNC0D3
 			public const int playbtn = 2131034112;
 			
 			// aapt resource value: 0x7f050006
-			public const int relativeLayout1 = 2131034118;
+			public const int scrollView1 = 2131034118;
 			
-			// aapt resource value: 0x7f050007
-			public const int scrollView1 = 2131034119;
-			
-			// aapt resource value: 0x7f05000b
-			public const int slidingDrawer1 = 2131034123;
+			// aapt resource value: 0x7f05000a
+			public const int slidingDrawer1 = 2131034122;
 			
 			static Id()
 			{
@@ -130,7 +127,10 @@ namespace BNC0D3
 			public const int Launcher = 2130903040;
 			
 			// aapt resource value: 0x7f030001
-			public const int Main = 2130903041;
+			public const int layout1 = 2130903041;
+			
+			// aapt resource value: 0x7f030002
+			public const int Main = 2130903042;
 			
 			static Layout()
 			{

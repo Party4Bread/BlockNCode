@@ -4,6 +4,7 @@ using Android.OS;
 using System.Collections.Generic;
 using System;
 using Android.Graphics;
+using Android.Util;
 
 namespace BNC0D3
 {
@@ -31,6 +32,10 @@ namespace BNC0D3
             defbtn = (Button)FindViewById(Resource.Id.def_button);
             calcbtn = (Button)FindViewById(Resource.Id.calc_button);
             gridflow = (GridLayout)FindViewById(Resource.Id.gridView1);
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            WindowManager.DefaultDisplay.GetMetrics(displayMetrics);
+            int height = displayMetrics.HeightPixels;
+            int width = displayMetrics.WidthPixels;
             //preset
             m_Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1);
             conOpt.Adapter = m_Adapter;
@@ -52,8 +57,8 @@ namespace BNC0D3
                 };
                 defflow.SetTextColor(Color.Rgb(0, 0, 0));
                 defflow.SetBackgroundColor(Color.Rgb(128, 0, 128));
-                defflow.SetMinHeight(diptppx(72));
-                defflow.SetMinWidth(diptppx(72));
+                defflow.SetMinHeight(width/5);
+                defflow.SetMinWidth(width/5);
                 defflow.SetTextSize(Android.Util.ComplexUnitType.Dip, 25);
                 gridflow.AddView(defflow);
             };
