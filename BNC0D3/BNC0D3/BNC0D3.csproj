@@ -54,6 +54,8 @@
   <ItemGroup>
     <Compile Include="Launcher.cs" />
     <Compile Include="MainActivity.cs" />
+    <Compile Include="Parts\definePart.cs" />
+    <Compile Include="Parts\FlowPart.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VmVaquit.cs" />
