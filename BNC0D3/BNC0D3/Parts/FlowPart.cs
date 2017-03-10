@@ -15,6 +15,7 @@ namespace BNC0D3.Parts
     public abstract class FlowPart
     {
         public int index;
+        public int compoId;
         public abstract string Digest();
     }
 }

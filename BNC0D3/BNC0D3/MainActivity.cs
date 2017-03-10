@@ -6,6 +6,7 @@ using System;
 using Android.Graphics;
 using Android.Util;
 using BNC0D3.Parts;
+using Android.Views;
 
 namespace BNC0D3
 {
@@ -19,7 +20,8 @@ namespace BNC0D3
         private Button defbtn;
         private Button calcbtn;
         private SlidingDrawer slider;
-
+        List<FlowPart> codeBlock;
+        AlertDialog.Builder dialog;
         public GridLayout gridflow { get; private set; }
 
         protected override void OnCreate(Bundle bundle)
@@ -38,14 +40,15 @@ namespace BNC0D3
             WindowManager.DefaultDisplay.GetMetrics(displayMetrics);
             int height = displayMetrics.HeightPixels;
             int width = displayMetrics.WidthPixels;
+            dialog= new AlertDialog.Builder(this);
 
             //preset
             m_Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1);
             conOpt.Adapter = m_Adapter;
             conIpt.ImeOptions = Android.Views.InputMethods.ImeAction.Done;
             //value4code
-            List<FlowPart> codeBlock = new List<FlowPart>();
-
+            codeBlock = new List<FlowPart>();
+            List<string> varList = new List<string>();
             //events
             conIpt.EditorAction += conIpt_editeract;
 
@@ -66,18 +69,82 @@ namespace BNC0D3
             };
 
             defbtn.Click += delegate {
-                Button defflow = new Button(this)
+                View layout = LayoutInflater.Inflate(Resource.Layout.defSetting, null);
+                dialog.SetView(layout);
+                EditText varValue = (EditText)layout.FindViewById(Resource.Id.varValue),
+                varName = (EditText)layout.FindViewById(Resource.Id.varName);
+                RadioButton varNum = (RadioButton)layout.FindViewById(Resource.Id.varNumber),
+                varStr = (RadioButton)layout.FindViewById(Resource.Id.varString);
+                dialog.SetPositiveButton(Android.Resource.String.Ok, (sender, e) =>
                 {
-                    Text = "선언",
-                    Tag = ""
-                };
-                defflow.SetTextColor(Color.Rgb(0, 0, 0));
-                defflow.SetBackgroundColor(Color.Rgb(128, 0, 128));
-                defflow.SetMinHeight(width / 5);
-                defflow.SetMinWidth(width / 5);
-                defflow.SetTextSize(Android.Util.ComplexUnitType.Dip, 25);
-                gridflow.AddView(defflow);
-                codeBlock.Add(new definePart(DefType.Number, "a", "4"));
+                    string value = varValue.Text;
+                    string name = varName.Text;
+                    DefType d = new DefType();
+                    if (varNum.Checked)
+                    {
+                        d = DefType.Number;
+                    }
+                    else if (varStr.Checked)
+                    {
+                        d = DefType.String;
+                    }
+
+                    FlowPart fp = new definePart(d, name, value);
+                    fp.compoId = View.GenerateViewId();
+                    fp.index = codeBlock.Count;
+                    codeBlock.Add(fp);
+
+                    Button defflow = new Button(this)
+                    {
+                        Text = "선언",
+                        Tag = codeBlock.Count-1,
+                        Id = fp.compoId
+                    };
+                    defflow.SetTextColor(Color.Rgb(0, 0, 0));
+                    defflow.SetBackgroundColor(Color.Rgb(128, 0, 128));
+                    defflow.SetMinHeight(width / 5);
+                    defflow.SetMinWidth(width / 5);
+                    defflow.SetTextSize(ComplexUnitType.Dip, 25);
+                    defflow.Click += (sednder,Dialo) => {
+                        int index = Convert.ToInt32(((Button)sednder).Tag.ToString());
+                        View la = LayoutInflater.Inflate(Resource.Layout.defSetting, null);
+                        dialog.SetView(la);
+                        EditText vV = (EditText)la.FindViewById(Resource.Id.varValue),
+                        vN = (EditText)la.FindViewById(Resource.Id.varName);
+                        RadioButton vNu = (RadioButton)la.FindViewById(Resource.Id.varNumber),
+                        vSt = (RadioButton)la.FindViewById(Resource.Id.varString);
+                        vV.Text = ((definePart)codeBlock[index]).defValue;
+                        vN.Text = ((definePart)codeBlock[index]).defName;
+
+                        if (((definePart)codeBlock[index]).defType == DefType.Number)
+                        {
+                            vNu.Checked = true;
+                        }
+                        else if (vSt.Checked)
+                        {
+                            vSt.Checked = true;
+                        }
+
+                        dialog.SetPositiveButton(Android.Resource.String.Ok, delegate
+                        {
+                            string v = vV.Text;
+                            string n = vN.Text;
+                            DefType dd = new DefType();
+                            if (vNu.Checked)
+                            {
+                                dd = DefType.Number;
+                            }
+                            else if (vSt.Checked)
+                            {
+                                dd = DefType.String;
+                            }
+                            codeBlock[index]=new definePart(dd, n, v);
+                        });
+                        dialog.Show();
+                    };
+                    gridflow.AddView(defflow);
+                });
+                dialog.Show();
             };
 
             calcbtn.Click += delegate {
@@ -85,6 +152,7 @@ namespace BNC0D3
             };
 
         }
+
         int diptppx(int dip)
         {
             return (int)((dip) * Resources.DisplayMetrics.Density); ;

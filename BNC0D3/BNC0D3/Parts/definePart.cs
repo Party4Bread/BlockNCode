@@ -15,10 +15,10 @@ namespace BNC0D3.Parts
     public enum DefType { Number, String };
     public class definePart : FlowPart
     {
-        string defName;
-        string defValue;
-        bool inputAble;
-        private DefType defType;
+        public string defName;
+        public string defValue;
+        public bool inputAble;
+        public DefType defType;
         public definePart(DefType defType,string defName,string defValue,bool inputAble=false)
         {
             this.defName = defName;
@@ -47,7 +47,7 @@ namespace BNC0D3.Parts
                 }
                 else
                 {
-                    return "var "+defName+":string="+defValue+";";
+                    return "var "+defName+":string=\""+defValue+"\";";
                 }
             }
         }
