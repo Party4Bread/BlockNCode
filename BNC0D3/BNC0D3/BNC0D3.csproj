@@ -70,8 +70,11 @@
     <Compile Include="Launcher.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Parts\calculationPart.cs" />
+    <Compile Include="Parts\codePart.cs" />
+    <Compile Include="Parts\conditionalPart.cs" />
     <Compile Include="Parts\definePart.cs" />
     <Compile Include="Parts\FlowPart.cs" />
+    <Compile Include="Parts\loopPart.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VmVaquit.cs" />

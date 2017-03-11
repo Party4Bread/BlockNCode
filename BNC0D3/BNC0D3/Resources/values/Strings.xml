@@ -2,4 +2,13 @@
 <resources>
     <string name="Hello">Hello World, Click Me!</string>
     <string name="ApplicationName">BNC0D3</string>
+    <string name="opcode_prompt">연산자</string>
+    <string-array name="opcode_array">
+      <item>+</item>
+      <item>-</item>
+      <item>×</item>
+      <item>÷</item>
+      <item>mod</item>
+      <item>pow</item>
+    </string-array>
 </resources>
