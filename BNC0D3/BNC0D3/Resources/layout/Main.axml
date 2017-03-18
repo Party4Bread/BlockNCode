@@ -46,6 +46,16 @@
                     android:layout_margin="5dip"
                     android:background="#892EE4"
                     android:textColor="#FFFFFF" />
+                <Button
+                    android:text="출력"
+                    android:textSize="25dip"
+                    android:layout_width="70dip"
+                    android:layout_height="70dip"
+                    android:minWidth="70dip"
+                    android:id="@+id/opt_button"
+                    android:layout_margin="5dip"
+                    android:background="#FF4848"
+                    android:textColor="#FFFFFF" />
             </LinearLayout>
         </HorizontalScrollView>
         <ScrollView

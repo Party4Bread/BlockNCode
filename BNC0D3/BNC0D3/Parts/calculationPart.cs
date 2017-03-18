@@ -21,7 +21,7 @@ namespace BNC0D3.Parts
         }
         public override string Digest()
         {
-            int locationOfequal = formula.LastIndexOf('=');
+            int locationOfequal = formula.IndexOf('=');
             return formula.Substring(locationOfequal + 1, formula.Length - locationOfequal - 1) + "="
                 + formula.Substring(0, locationOfequal)+";";
         }
