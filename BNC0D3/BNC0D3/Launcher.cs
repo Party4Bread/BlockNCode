@@ -20,13 +20,17 @@ namespace BNC0D3
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.Launcher);
             Button playbtn = (Button)FindViewById(Resource.Id.playbtn);
+            Button optbtn = (Button)FindViewById(Resource.Id.optbtn);
             Button exitbtn = (Button)FindViewById(Resource.Id.exitbtn);
             playbtn.Click += delegate {
                 StartActivity(typeof(MainActivity));
                 OverridePendingTransition(Android.Resource.Animation.SlideInLeft, Android.Resource.Animation.SlideOutRight);
                 
             };
-            
+            optbtn.Click += delegate {
+                StartActivity(typeof(userPref));
+                OverridePendingTransition(Android.Resource.Animation.SlideInLeft, Android.Resource.Animation.SlideOutRight);
+            };
             exitbtn.Click += delegate { Finish(); };
 
         }

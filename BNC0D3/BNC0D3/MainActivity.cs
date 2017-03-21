@@ -8,6 +8,7 @@ using Android.Util;
 using BNC0D3.Parts;
 using Android.Views;
 using System.Text.RegularExpressions;
+using Android.Content;
 
 namespace BNC0D3
 {
@@ -35,6 +36,7 @@ namespace BNC0D3
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
             #region SET_VAR_VALUE
+            bool codeShow = Application.Context.GetSharedPreferences("BNCODE", FileCreationMode.Private).GetBoolean("codeShow",false);
             conOpt = (ListView)FindViewById(Resource.Id.consoleOpt);
             conIpt = (EditText)FindViewById(Resource.Id.consoleIpt);
             consumit = (Button)FindViewById(Resource.Id.consoleSummit);
@@ -68,9 +70,25 @@ namespace BNC0D3
             }; 
             slider.DrawerOpen += delegate
             {
-                foreach (FlowPart i in codeBlock)
+                if(codeShow)
                 {
-                    m_Adapter.Add(i.Digest());
+                    foreach (FlowPart i in codeBlock)
+                    {
+                        m_Adapter.Add(i.Digest());
+                    }
+                }
+                else
+                {
+                    string code = "";
+                    foreach (FlowPart i in codeBlock)
+                    {
+                        code += i.Digest();
+                    }
+                    Vaquita4android.Parser parser = new Vaquita4android.Parser();
+                    VTvm.vm = new Vaquita4android.vm.Machine();
+                    VTvm.vm.load(parser.compile(code));
+                    VTvm.vm.onPrint+=(object o)=> { m_Adapter.Add(o.ToString()); };
+                    VTvm.vm.run();
                 }
             };
             slider.DrawerClose += delegate { m_Adapter.Clear(); };
@@ -179,12 +197,12 @@ namespace BNC0D3
             };
             calcbtn.Click += delegate
             {
-
                 View layout = LayoutInflater.Inflate(Resource.Layout.calcSetting, null);
                 dialog.SetView(layout);
                 TextView menuName = (TextView)layout.FindViewById(Resource.Id.MenuName);
                 menuName.Text = "계산식";
                 EditText formularTb = (EditText)layout.FindViewById(Resource.Id.formular);
+                //레이아웃설정
                 dialog.SetPositiveButton(Android.Resource.String.Ok, (sender, e) =>
                 {
                     try
@@ -211,6 +229,8 @@ namespace BNC0D3
                         {
                             int index = Convert.ToInt32(((Button)sednder).Tag.ToString());
                             View la = LayoutInflater.Inflate(Resource.Layout.calcSetting, null);
+                            TextView mN = (TextView)la.FindViewById(Resource.Id.MenuName);
+                            mN.Text = "계산식";
                             dialog.SetView(la);
                             EditText formTb = (EditText)FindViewById(Resource.Id.formular);
                             dialog.SetPositiveButton(Android.Resource.String.Ok, delegate
@@ -270,6 +290,8 @@ namespace BNC0D3
                         {
                             int index = Convert.ToInt32(((Button)sednder).Tag.ToString());
                             View la = LayoutInflater.Inflate(Resource.Layout.calcSetting, null);
+                            TextView mN = (TextView)la.FindViewById(Resource.Id.MenuName);
+                            mN.Text = "출력 수식";
                             dialog.SetView(la);
                             EditText formTb = (EditText)FindViewById(Resource.Id.formular);
                             dialog.SetPositiveButton(Android.Resource.String.Ok, delegate
@@ -296,7 +318,6 @@ namespace BNC0D3
                 });
                 dialog.Show();
             };
-
             #endregion
 
         }
@@ -475,7 +496,7 @@ namespace BNC0D3
             if (t == DefType.Number)
             {
                 decimal temp;
-                if (decimal.TryParse(value, out temp))
+                if (!decimal.TryParse(value, out temp))
                 {
                     throw new Exception("변수가 숫자가 아닙니다.");
                 }

@@ -206,6 +206,9 @@ namespace BNC0D3
 			// aapt resource value: 0x7f060011
 			public const int horizontalScrollView1 = 2131099665;
 			
+			// aapt resource value: 0x7f06001d
+			public const int linearLayout1 = 2131099677;
+			
 			// aapt resource value: 0x7f06000f
 			public const int loadingImage = 2131099663;
 			
@@ -223,6 +226,9 @@ namespace BNC0D3
 			
 			// aapt resource value: 0x7f06000a
 			public const int playbtn = 2131099658;
+			
+			// aapt resource value: 0x7f06001e
+			public const int scSwitch = 2131099678;
 			
 			// aapt resource value: 0x7f060015
 			public const int scrollView1 = 2131099669;
@@ -290,6 +296,9 @@ namespace BNC0D3
 			
 			// aapt resource value: 0x7f030006
 			public const int Main = 2130903046;
+			
+			// aapt resource value: 0x7f030007
+			public const int userPref = 2130903047;
 			
 			static Layout()
 			{

@@ -23,7 +23,7 @@ namespace BNC0D3.Parts
 
         public override string Digest()
         {
-            return "print "+formula+";";
+            return "print ("+formula+");";
         }
     }
 }
