@@ -14,6 +14,7 @@ namespace BNC0D3
     [Activity(Label = "BNC0D3", WindowSoftInputMode = Android.Views.SoftInput.AdjustPan | Android.Views.SoftInput.StateVisible, Theme = "@android:style/Theme.NoTitleBar")]
     public class MainActivity : Activity
     {
+        #region CREATE_VAR
         private ArrayAdapter<string> m_Adapter;
         private EditText conIpt;
         private ListView conOpt;
@@ -25,12 +26,15 @@ namespace BNC0D3
         List<FlowPart> codeBlock;
         AlertDialog.Builder dialog;
         public GridLayout gridflow { get; private set; }
-
+        List<string> varList;
+        #endregion
         protected override void OnCreate(Bundle bundle)
         {
+
             base.OnCreate(bundle);
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
+            #region SET_VAR_VALUE
             conOpt = (ListView)FindViewById(Resource.Id.consoleOpt);
             conIpt = (EditText)FindViewById(Resource.Id.consoleIpt);
             consumit = (Button)FindViewById(Resource.Id.consoleSummit);
@@ -40,21 +44,28 @@ namespace BNC0D3
             gridflow = (GridLayout)FindViewById(Resource.Id.gridView1);
             slider = (SlidingDrawer)FindViewById(Resource.Id.slidingDrawer1);
             DisplayMetrics displayMetrics = new DisplayMetrics();
+            dialog = new AlertDialog.Builder(this);
             WindowManager.DefaultDisplay.GetMetrics(displayMetrics);
             int height = displayMetrics.HeightPixels;
             int width = displayMetrics.WidthPixels;
-            dialog = new AlertDialog.Builder(this);
-
             //preset
             m_Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1);
             conOpt.Adapter = m_Adapter;
             conIpt.ImeOptions = Android.Views.InputMethods.ImeAction.Done;
             //value4code
             codeBlock = new List<FlowPart>();
-            List<string> varList = new List<string>();
-            //events
-            conIpt.EditorAction += conIpt_editeract;
+            varList = new List<string>();
+            #endregion
 
+            #region COMPONENT_EVENT
+            conIpt.EditorAction += (object sender, TextView.EditorActionEventArgs e)=>{
+                if (e.ActionId == Android.Views.InputMethods.ImeAction.Done)
+                {
+                    //VTvm.vm.io.read(((EditText)sender).Text);
+                    m_Adapter.Add(((EditText)sender).Text);
+                    conIpt.Text = "";
+                }
+            }; 
             slider.DrawerOpen += delegate
             {
                 foreach (FlowPart i in codeBlock)
@@ -200,7 +211,7 @@ namespace BNC0D3
                         {
                             int index = Convert.ToInt32(((Button)sednder).Tag.ToString());
                             View la = LayoutInflater.Inflate(Resource.Layout.calcSetting, null);
-                            dialog.SetView(layout);
+                            dialog.SetView(la);
                             EditText formTb = (EditText)FindViewById(Resource.Id.formular);
                             dialog.SetPositiveButton(Android.Resource.String.Ok, delegate
                             {
@@ -238,36 +249,36 @@ namespace BNC0D3
                     try
                     {
                         string formula = formularTb.Text;
-                        checkFormular(varList, formularTb.Text);
-                        FlowPart fp = new calculationPart(formula);
+                        //checkFormular(varList, formularTb.Text); TODO:넣기
+                        FlowPart fp = new optPart(formula);
                         fp.compoId = View.GenerateViewId();
                         fp.index = codeBlock.Count;
                         codeBlock.Add(fp);
 
-                        Button calcflow = new Button(this)
+                        Button optflow = new Button(this)
                         {
-                            Text = "연산",
+                            Text = "출력",
                             Tag = codeBlock.Count - 1,
                             Id = fp.compoId
                         };
-                        calcflow.SetTextColor(Color.Rgb(0, 0, 0));
-                        calcflow.SetBackgroundColor(Color.Rgb(137, 46, 228));
-                        calcflow.SetMinHeight(width / 5);
-                        calcflow.SetMinWidth(width / 5);
-                        calcflow.SetTextSize(ComplexUnitType.Dip, 25);
-                        calcflow.Click += (sednder, Dialo) =>
+                        optflow.SetTextColor(Color.Rgb(0, 0, 0));
+                        optflow.SetBackgroundColor(Color.Rgb(255, 72, 72));
+                        optflow.SetMinHeight(width / 5);
+                        optflow.SetMinWidth(width / 5);
+                        optflow.SetTextSize(ComplexUnitType.Dip, 25);
+                        optflow.Click += (sednder, Dialo) =>
                         {
                             int index = Convert.ToInt32(((Button)sednder).Tag.ToString());
                             View la = LayoutInflater.Inflate(Resource.Layout.calcSetting, null);
-                            dialog.SetView(layout);
+                            dialog.SetView(la);
                             EditText formTb = (EditText)FindViewById(Resource.Id.formular);
                             dialog.SetPositiveButton(Android.Resource.String.Ok, delegate
                             {
                                 try
                                 {
                                     string form = formTb.Text;
-                                    checkFormular(varList, formularTb.Text);
-                                    codeBlock[index] = new calculationPart(formula);
+                                    //checkFormular(varList, formularTb.Text);
+                                    codeBlock[index] = new optPart(formula);
                                 }
                                 catch (Exception ee)
                                 {
@@ -276,7 +287,7 @@ namespace BNC0D3
                             });
                             dialog.Show();
                         };
-                        gridflow.AddView(calcflow);
+                        gridflow.AddView(optflow);
                     }
                     catch (Exception ee)
                     {
@@ -285,45 +296,71 @@ namespace BNC0D3
                 });
                 dialog.Show();
             };
+
+            #endregion
+
         }
+        #region CHECK_FUNCTION
         bool checkFormular(List<string> var, string s)
         {
             string st = s;
             List<String> v = new List<String>();
             List<String> o = new List<String>();
-            List<String> additionalop = new List<String>();
-            additionalop.Add("+");
-            additionalop.Add("-");
-            additionalop.Add("*");
-            additionalop.Add("/");
-            additionalop.Add("^");
+            List<String> op = new List<String>();
+            op.Add("+");
+            op.Add("-");
+            op.Add("*");
+            op.Add("/");
+            op.Add("^");
+            List<String> f = new List<String>();
             //int x = 0;
             int length = st.Length;
-            string tem = "";
+            String tem = "";
             int x = 0;
             for (int y = 0; y < length; y++)
             {
                 // String tem="";
-                string temp = st.Substring(x, 1);
-                if (additionalop.Contains(temp))
+                String temp = st.Substring(x, 1);
+                if (temp == "+" || temp == "-" || temp == "*" || temp == "/")
                 {
-                    if (temp == "=")
+                    if (!(tem.Length == 0))
                     {
                         v.Add(tem);
-                        o.Add(st.Substring(x, 1));
-                        st = st.Remove(0, x + 1);
-                        x = 0;
-                        tem = "";
-                        v.Add(st);
                     }
-                    else
+                    o.Add(st.Substring(x, 1));
+                    st = st.Remove(0, x + 1);
+                    x = 0;
+                    tem = "";
+                }
+                else if (temp == "(" || temp == ")")
+                {
+                    st = st.Remove(0, x + 1);
+                    f.Add(temp + " " + y);
+                    if (tem != "")
                     {
                         v.Add(tem);
-                        o.Add(st.Substring(x, 1));
-                        st = st.Remove(0, x + 1);
-                        x = 0;
-                        tem = "";
                     }
+                    tem = "";
+                    x = 0;
+                }
+                else if (temp == "=")
+                {
+                    if (tem != "")
+                    { v.Add(tem); }
+                    o.Add(st.Substring(x, 1));
+                    st = st.Remove(0, x + 1);
+                    x = 0;
+                    tem = "";
+                    if (st.Contains("+") || st.Contains("-") || st.Contains("*") || st.Contains("/"))
+                    {
+                        throw new Exception("= 뒤는 한개의 항만 올 수 있습니다.");
+                    }
+                    int dump;
+                    if (int.TryParse(st, out dump))
+                    {
+                        throw new Exception("= 뒤에 변수가 아닌 상수 " + dump + "가 사용되었습니다.");
+                    }
+                    v.Add(st);
                 }
                 else
                 {
@@ -334,14 +371,14 @@ namespace BNC0D3
 
             v.Sort();
             var.Sort();
-            if (o.Contains("="))
+            if (!o.Contains("="))
             {
-                throw new Exception("= 연산자가 없습니다.");
+                throw new Exception("= 연산자가 인식되지 않았습니다.");
             }
             foreach (string t in v)
             {
-                int temp;
-                bool tryparse = int.TryParse(t, out temp);
+                Decimal temp;
+                bool tryparse = Decimal.TryParse(t, out temp);
                 if (tryparse)
                 {
                     continue;
@@ -360,13 +397,63 @@ namespace BNC0D3
                     throw new Exception("명시되지 않은 변수: '" + t + "'(을)를 사용했습니다.");
                 }
             }
-
+            if (f.Count != 0)
+            {
+                if (f[0].Contains("("))
+                {
+                    for (int te = 0; te < f.Count; te++)
+                    {
+                        String ss = f[te];
+                        f.Remove(ss);
+                        if (!(te == 0))
+                        {
+                            te--;
+                        }
+                        string[] temp = ss.Split(' ');
+                        if (temp[0] == "(")
+                        {
+                            bool p = false;
+                            for (int tee = te; tee < f.Count; tee++)
+                            {
+                                String sss = f[tee];
+                                string[] tttt = sss.Split(' ');
+                                if (tttt[0] == ")")
+                                {
+                                    if (int.Parse(tttt[1]) > int.Parse(temp[1]))
+                                    {
+                                        p = true;
+                                        f.Remove(sss);
+                                        if (te != 0)
+                                            tee--;
+                                        te--;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!p)
+                            {
+                                throw new Exception("괄호의 짝이 맞지 않습니다.");
+                            }
+                        }
+                    }
+                }
+            }
+            if (f.Count != 0)
+            {
+                throw new Exception("괄호의 짝이 맞지 않습니다.");
+            }
             foreach (string t in o)
             {
                 bool pass = false;
-                foreach (string te in additionalop)
+
+                foreach (string te in op)
                 {
-                    if (t == te || t == "=")
+                    if (t.Equals("="))
+                    {
+                        pass = true;
+                        break;
+                    }
+                    if (t == te)
                     {
                         pass = true;
                         break;
@@ -377,9 +464,8 @@ namespace BNC0D3
                     throw new Exception("명시되지 않은 연산자: '" + t + "'(을)를 사용했습니다.");
                 }
             }
-
-            return true;
-        }
+            return true;        
+    }
         bool checkVar(DefType t, string name, ref string value)
         {
             if (!Regex.IsMatch(name, "^[a-z_]\\w*$"))
@@ -407,14 +493,6 @@ namespace BNC0D3
 
             return true;
         }
-        private void conIpt_editeract(object sender, TextView.EditorActionEventArgs e)
-        {
-            if (e.ActionId == Android.Views.InputMethods.ImeAction.Done)
-            {
-                //VTvm.vm.io.read(((EditText)sender).Text);
-                m_Adapter.Add(((EditText)sender).Text);
-                conIpt.Text = "";
-            }
-        }
+        #endregion
     }
 }
