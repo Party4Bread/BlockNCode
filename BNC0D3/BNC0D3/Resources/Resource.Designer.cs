@@ -176,17 +176,17 @@ namespace BNC0D3
 			// aapt resource value: 0x7f060013
 			public const int calc_button = 2131099667;
 			
-			// aapt resource value: 0x7f06001b
-			public const int consoleIpt = 2131099675;
-			
-			// aapt resource value: 0x7f06001a
-			public const int consoleOpt = 2131099674;
-			
 			// aapt resource value: 0x7f06001c
-			public const int consoleSummit = 2131099676;
+			public const int consoleIpt = 2131099676;
 			
-			// aapt resource value: 0x7f060017
-			public const int content = 2131099671;
+			// aapt resource value: 0x7f06001b
+			public const int consoleOpt = 2131099675;
+			
+			// aapt resource value: 0x7f06001d
+			public const int consoleSummit = 2131099677;
+			
+			// aapt resource value: 0x7f060018
+			public const int content = 2131099672;
 			
 			// aapt resource value: 0x7f060012
 			public const int def_button = 2131099666;
@@ -197,17 +197,17 @@ namespace BNC0D3
 			// aapt resource value: 0x7f060001
 			public const int formular = 2131099649;
 			
-			// aapt resource value: 0x7f060016
-			public const int gridView1 = 2131099670;
+			// aapt resource value: 0x7f060017
+			public const int gridView1 = 2131099671;
 			
-			// aapt resource value: 0x7f060018
-			public const int handle = 2131099672;
+			// aapt resource value: 0x7f060019
+			public const int handle = 2131099673;
 			
 			// aapt resource value: 0x7f060011
 			public const int horizontalScrollView1 = 2131099665;
 			
-			// aapt resource value: 0x7f06001d
-			public const int linearLayout1 = 2131099677;
+			// aapt resource value: 0x7f06001e
+			public const int linearLayout1 = 2131099678;
 			
 			// aapt resource value: 0x7f06000f
 			public const int loadingImage = 2131099663;
@@ -227,14 +227,17 @@ namespace BNC0D3
 			// aapt resource value: 0x7f06000a
 			public const int playbtn = 2131099658;
 			
-			// aapt resource value: 0x7f06001e
-			public const int scSwitch = 2131099678;
-			
 			// aapt resource value: 0x7f060015
-			public const int scrollView1 = 2131099669;
+			public const int save_button = 2131099669;
 			
-			// aapt resource value: 0x7f060019
-			public const int slidingDrawer1 = 2131099673;
+			// aapt resource value: 0x7f06001f
+			public const int scSwitch = 2131099679;
+			
+			// aapt resource value: 0x7f060016
+			public const int scrollView1 = 2131099670;
+			
+			// aapt resource value: 0x7f06001a
+			public const int slidingDrawer1 = 2131099674;
 			
 			// aapt resource value: 0x7f060002
 			public const int textView1 = 2131099650;

@@ -14,7 +14,7 @@ namespace BNC0D3.Parts
 {
     class calculationPart : FlowPart
     {
-        string formula;
+        public string formula;
         public calculationPart(string formula)
         {
             this.formula = formula;
