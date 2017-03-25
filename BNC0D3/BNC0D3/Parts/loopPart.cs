@@ -18,7 +18,7 @@ namespace BNC0D3.Parts
 
         public override string Digest()
         {
-            return "";
+            return "while(1){"+codeinloop.Digest()+"}";
         }
     }
 }

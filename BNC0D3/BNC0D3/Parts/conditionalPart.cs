@@ -20,7 +20,14 @@ namespace BNC0D3.Parts
         public codePart falsePart;
         public override string Digest()
         {
-            throw new NotImplementedException();
+            if(!elsestate)
+            {
+                return "if(" + condition + "){" + truePart.Digest() + "}";
+            }
+            else
+            {
+                return "if(" + condition + "){" + truePart.Digest() + "}else{" + falsePart.Digest() +"}";
+            }
         }
     }
 }
