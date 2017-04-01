@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Xml;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -28,6 +28,11 @@ namespace BNC0D3.Parts
             {
                 return "if(" + condition + "){" + truePart.Digest() + "}else{" + falsePart.Digest() +"}";
             }
+        }
+
+        public override XmlNode XmlDigest()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -12,7 +12,7 @@ using Android.Content;
 
 namespace BNC0D3
 {
-    [Activity(Label = "BNC0D3", WindowSoftInputMode = Android.Views.SoftInput.AdjustPan | Android.Views.SoftInput.StateVisible, Theme = "@android:style/Theme.NoTitleBar")]
+    [Activity(ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait,Label = "BNC0D3", WindowSoftInputMode = Android.Views.SoftInput.AdjustPan | Android.Views.SoftInput.StateVisible, Theme = "@android:style/Theme.NoTitleBar")]
     public class MainActivity : Activity
     {
         #region CREATE_VAR

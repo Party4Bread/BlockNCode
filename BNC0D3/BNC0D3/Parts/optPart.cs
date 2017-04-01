@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Xml;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -24,6 +24,13 @@ namespace BNC0D3.Parts
         public override string Digest()
         {
             return "print ("+formula+");";
+        }
+
+        public override XmlNode XmlDigest()
+        {
+            XmlNode optNode = new XmlDocument().CreateElement("opt");
+            optNode.InnerText = formula;
+            return optNode;
         }
     }
 }

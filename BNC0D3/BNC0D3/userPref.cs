@@ -13,7 +13,7 @@ using Android.Preferences;
 
 namespace BNC0D3
 {
-    [Activity(Label = "userPref")]
+    [Activity(ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait,Label = "userPref")]
     public class userPref : Activity
     {
         protected override void OnCreate(Bundle savedInstanceState)

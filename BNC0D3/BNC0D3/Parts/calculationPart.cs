@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Xml;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -24,6 +24,11 @@ namespace BNC0D3.Parts
             int locationOfequal = formula.IndexOf('=');
             return formula.Substring(locationOfequal + 1, formula.Length - locationOfequal - 1) + "="
                 + formula.Substring(0, locationOfequal)+";";
+        }
+
+        public override XmlNode XmlDigest()
+        {
+            throw new NotImplementedException();
         }
     }
 }
