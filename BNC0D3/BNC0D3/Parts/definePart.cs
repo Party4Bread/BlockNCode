@@ -52,9 +52,13 @@ namespace BNC0D3.Parts
             }
         }
 
-        public override XmlNode XmlDigest()
+        public override XmlElement XmlDigest(XmlDocument doc)
         {
-            throw new NotImplementedException();
+            XmlElement defElement = doc.CreateElement("def");
+            defElement.SetAttribute("type", defType==DefType.Number?"0":"1");
+            defElement.SetAttribute("value", defValue);
+            defElement.InnerText=defName;
+            return defElement;
         }
     }
 }

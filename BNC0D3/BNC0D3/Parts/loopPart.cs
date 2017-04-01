@@ -21,11 +21,11 @@ namespace BNC0D3.Parts
             return "while(1){"+codeinloop.Digest()+"}";
         }
 
-        public override XmlNode XmlDigest()
+        public override XmlElement XmlDigest(XmlDocument doc)
         {
-            XmlNode loopNode = new XmlDocument().CreateElement("loop");
-            loopNode.AppendChild(codeinloop.XmlDigest());
-            return loopNode;
+            XmlElement loopElement = doc.CreateElement("loop");
+            loopElement.AppendChild(codeinloop.XmlDigest(doc));
+            return loopElement;
         }
     }
 }

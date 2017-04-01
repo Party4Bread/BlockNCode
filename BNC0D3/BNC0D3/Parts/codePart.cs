@@ -25,7 +25,7 @@ namespace BNC0D3.Parts
             return "";
         }
 
-        public override XmlNode XmlDigest()
+        public override XmlElement XmlDigest(XmlDocument doc)
         {
             throw new NotImplementedException();
         }

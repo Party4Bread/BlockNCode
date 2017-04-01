@@ -25,12 +25,12 @@ namespace BNC0D3.Parts
         {
             return "print ("+formula+");";
         }
-
-        public override XmlNode XmlDigest()
+        
+        public override XmlElement XmlDigest(XmlDocument doc)
         {
-            XmlNode optNode = new XmlDocument().CreateElement("opt");
-            optNode.InnerText = formula;
-            return optNode;
+            XmlElement optElement = doc.CreateElement("opt");
+            optElement.InnerText = formula;
+            return optElement;
         }
     }
 }

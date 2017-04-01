@@ -20,17 +20,17 @@ namespace BNC0D3.Parts
         public codePart falsePart;
         public override string Digest()
         {
-            if(!elsestate)
+            if (!elsestate)
             {
                 return "if(" + condition + "){" + truePart.Digest() + "}";
             }
             else
             {
-                return "if(" + condition + "){" + truePart.Digest() + "}else{" + falsePart.Digest() +"}";
+                return "if(" + condition + "){" + truePart.Digest() + "}else{" + falsePart.Digest() + "}";
             }
         }
 
-        public override XmlNode XmlDigest()
+        public override XmlElement XmlDigest(XmlDocument doc)
         {
             throw new NotImplementedException();
         }

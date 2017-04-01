@@ -26,7 +26,7 @@ namespace BNC0D3.Parts
                 + formula.Substring(0, locationOfequal)+";";
         }
 
-        public override XmlNode XmlDigest()
+        public override XmlElement XmlDigest(XmlDocument doc)
         {
             throw new NotImplementedException();
         }

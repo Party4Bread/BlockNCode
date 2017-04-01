@@ -9,6 +9,10 @@ using BNC0D3.Parts;
 using Android.Views;
 using System.Text.RegularExpressions;
 using Android.Content;
+using System.Xml;
+using Plugin.FilePicker;
+using Plugin.FilePicker.Abstractions;
+using System.Text;
 
 namespace BNC0D3
 {
@@ -23,6 +27,7 @@ namespace BNC0D3
         private Button defbtn;
         private Button calcbtn;
         private Button optbtn;
+        private Button savebtn;
         bool codeShow;
         private SlidingDrawer slider;
         List<FlowPart> codeBlock;
@@ -31,6 +36,7 @@ namespace BNC0D3
         AlertDialog dialogger;
         public GridLayout gridflow { get; private set; }
         List<string> varList;
+        private Button loadbtn;
         #endregion
         protected override void OnCreate(Bundle bundle)
         {
@@ -41,12 +47,14 @@ namespace BNC0D3
             codeShow = Application.Context.GetSharedPreferences("BNCODE", FileCreationMode.Private).GetBoolean("codeShow", false);
             conOpt = (ListView)FindViewById(Resource.Id.consoleOpt);
             conIpt = (EditText)FindViewById(Resource.Id.consoleIpt);
-            consumit = (Button)FindViewById(Resource.Id.consoleSummit);
-            defbtn = (Button)FindViewById(Resource.Id.def_button);
-            calcbtn = (Button)FindViewById(Resource.Id.calc_button);
-            optbtn = (Button)FindViewById(Resource.Id.opt_button);
+            consumit = FindViewById<Button>(Resource.Id.consoleSummit);
+            defbtn = FindViewById<Button>(Resource.Id.def_button);
+            calcbtn = FindViewById<Button>(Resource.Id.calc_button);
+            optbtn = FindViewById<Button>(Resource.Id.opt_button);
+            loadbtn = FindViewById<Button>(Resource.Id.load_button);
             gridflow = (GridLayout)FindViewById(Resource.Id.gridView1);
             slider = (SlidingDrawer)FindViewById(Resource.Id.slidingDrawer1);
+            savebtn = FindViewById<Button>(Resource.Id.save_button);
             DisplayMetrics displayMetrics = new DisplayMetrics();
             dialog = new AlertDialog.Builder(this);
             WindowManager.DefaultDisplay.GetMetrics(displayMetrics);
@@ -68,6 +76,8 @@ namespace BNC0D3
             defbtn.Click += Defbtn_Click;
             calcbtn.Click += Calcbtn_Click;
             optbtn.Click += Optbtn_Click;
+            savebtn.Click += Savebtn_Click;
+            loadbtn.Click += Loadbtn_ClickAsync;
             #endregion
             /*
             LinearLayout ll = (LinearLayout)la.RootView;
@@ -79,6 +89,51 @@ namespace BNC0D3
                 gridflow.RemoveViewAt(index);
             };
             ll.AddView(delb);*/
+        }
+
+        private async void Loadbtn_ClickAsync(object sender, EventArgs e)
+        {
+            FileData loadxmlfile = await CrossFilePicker.Current.PickFile();
+            XmlDocument loaddoc = new XmlDocument();
+            loaddoc.LoadXml(Encoding.UTF8.GetString(loadxmlfile.DataArray));
+            foreach(XmlElement i in loaddoc.ChildNodes)
+            {
+                switch(i.OuterXml)
+                {
+                    case "def":
+
+                        break;
+                    case "calc":
+                        break;
+                    case "loop":
+                        break;
+                    case "opt":
+                        break;
+                    case "":
+                        break;
+                }
+            }
+        }
+
+        private void Savebtn_Click(object sender, EventArgs e)
+        {
+            XmlDocument savedoc = new XmlDocument();
+            //CrossFilePicker.Current.SaveFile(new FileData() {})
+            View layout = LayoutInflater.Inflate(Resource.Layout.calcSetting, null);
+            dialog.SetView(layout);
+            TextView menuName = (TextView)layout.FindViewById(Resource.Id.MenuName);
+            menuName.Text = "파일이름";
+            EditText filenameTb = (EditText)layout.FindViewById(Resource.Id.formular);
+            //레이아웃설정
+            dialog.SetPositiveButton(Android.Resource.String.Ok, (sendder, ee) =>
+            {
+                foreach (FlowPart f in codeBlock)
+                    savedoc.AppendChild(f.XmlDigest(savedoc));
+                savedoc.Save(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/BNC_SAVE/" + filenameTb.Text);
+                Toast.MakeText(this, "Done!", ToastLength.Short).Show();
+            });
+            dialogger = dialog.Create();
+            dialogger.Show();
         }
 
         #region component_Function
