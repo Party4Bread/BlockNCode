@@ -51,6 +51,7 @@ namespace BNC0D3.Parts
                 }
             }
         }
+        
 
         public override XmlElement XmlDigest(XmlDocument doc)
         {
