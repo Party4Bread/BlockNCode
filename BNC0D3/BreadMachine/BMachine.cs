@@ -91,7 +91,10 @@ namespace BreadMachine.Android
 
         public void Run()
         {
-            
+            foreach(var meaningless_val in codeList)
+            {
+                Step();
+            }
         }
 
         #region IDisposable implementation with finalizer

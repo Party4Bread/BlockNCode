@@ -28,7 +28,8 @@ namespace BNC0D3.Parts
         
         public override XmlElement XmlDigest(XmlDocument doc)
         {
-            XmlElement optElement = doc.CreateElement("opt");
+            XmlElement optElement = doc.CreateElement("ivk");
+            optElement.SetAttribute("type", "0");
             optElement.InnerText = formula;
             return optElement;
         }

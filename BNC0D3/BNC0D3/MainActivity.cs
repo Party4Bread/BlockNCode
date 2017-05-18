@@ -13,6 +13,7 @@ using System.Xml;
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
 using System.Text;
+using BreadMachine.Android;
 
 namespace BNC0D3
 {
@@ -268,16 +269,22 @@ namespace BNC0D3
             }
             else
             {
-                string code = "";
+
+                XmlDocument code = new XmlDocument();
+                XmlElement cd = code.CreateElement("code");                
                 foreach (FlowPart i in codeBlock)
                 {
-                    code += i.Digest();
+                    cd.AppendChild(i.XmlDigest(code));
                 }
+                code.AppendChild(cd);
+                BMachine vm = new BMachine(code.OuterXml, (string o) => { m_Adapter.Add(o); });
+                vm.Run();
+                /*
                 Vaquita4android.Parser parser = new Vaquita4android.Parser();
                 VTvm.vm = new Vaquita4android.vm.Machine();
                 VTvm.vm.load(parser.compile(code));
                 VTvm.vm.onPrint += (object o) => { m_Adapter.Add(o.ToString()); };
-                VTvm.vm.run();
+                VTvm.vm.run();*/
             }
         }
 
