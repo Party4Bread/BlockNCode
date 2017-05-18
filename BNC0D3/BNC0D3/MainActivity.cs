@@ -148,109 +148,111 @@ namespace BNC0D3
         {
             View layout = LayoutInflater.Inflate(Resource.Layout.defSetting, null);
             dialog.SetView(layout);
-            EditText varValue = (EditText)layout.FindViewById(Resource.Id.varValue),
-            varName = (EditText)layout.FindViewById(Resource.Id.varName);
-            RadioButton varNum = (RadioButton)layout.FindViewById(Resource.Id.varNumber),
-            varStr = (RadioButton)layout.FindViewById(Resource.Id.varString);
-            dialog.SetPositiveButton(Android.Resource.String.Ok, (sender, e) =>
-            {
-                try
-                {
-                    string value = varValue.Text;
-                    string name = varName.Text;
-                    DefType d = new DefType();
-                    if (varNum.Checked)
-                    {
-                        d = DefType.Number;
-                    }
-                    else if (varStr.Checked)
-                    {
-                        d = DefType.String;
-                    }
-                    checkVar(d, name, ref value);
-                    FlowPart fp = new definePart(d, name, value)
-                    {
-                        compoId = View.GenerateViewId(),
-                        index = codeBlock.Count
-                    };
-                    codeBlock.Add(fp);
-                    varList.Add(name);
-                    Button defflow = new Button(this)
-                    {
-                        Text = "선언",
-                        Tag = codeBlock.Count - 1,
-                        Id = fp.compoId
-                    };
-                    defflow.SetTextColor(Color.Rgb(0, 0, 0));
-                    defflow.SetBackgroundColor(Color.Rgb(128, 0, 128));
-                    defflow.SetMinHeight(width / 5);
-                    defflow.SetMinWidth(width / 5);
-                    defflow.SetTextSize(ComplexUnitType.Dip, 25);
-                    defflow.Click += (sednder, Dialo) =>
-                    {
-                        int index = Convert.ToInt32(((Button)sednder).Tag.ToString());
-                        View la = LayoutInflater.Inflate(Resource.Layout.defSetting, null);
-                        dialog.SetView(la);
-                        EditText vV = (EditText)la.FindViewById(Resource.Id.varValue),
-                        vN = (EditText)la.FindViewById(Resource.Id.varName);
-                        RadioButton vNu = (RadioButton)la.FindViewById(Resource.Id.varNumber),
-                        vSt = (RadioButton)la.FindViewById(Resource.Id.varString);
-                        vV.Text = ((definePart)codeBlock[index]).defValue;
-                        vN.Text = ((definePart)codeBlock[index]).defName;
-                        LinearLayout ll = (LinearLayout)la.RootView;
-                        Button delb = new Button(this) { Text = "삭제" };
-                        delb.SetBackgroundColor(Color.Rgb(255, 0, 0));
-                        delb.SetTextColor(Color.Rgb(0, 0, 0));
-                        delb.Click += delegate
-                        {
-                            codeBlock.RemoveAt(index);
-                            gridflow.RemoveViewAt(index);
-                            dialogger.Cancel();
-                        };
-                        ll.AddView(delb);
+            #region temp
+            //EditText varValue = (EditText)layout.FindViewById(Resource.Id.varValue),
+            //varName = (EditText)layout.FindViewById(Resource.Id.varName);
+            //RadioButton varNum = (RadioButton)layout.FindViewById(Resource.Id.varNumber),
+            //varStr = (RadioButton)layout.FindViewById(Resource.Id.varString);
+            //dialog.SetPositiveButton(Android.Resource.String.Ok, (sender, e) =>
+            //{
+            //    try
+            //    {
+            //        string value = varValue.Text;
+            //        string name = varName.Text;
+            //        DefType d = new DefType();
+            //        if (varNum.Checked)
+            //        {
+            //            d = DefType.Number;
+            //        }
+            //        else if (varStr.Checked)
+            //        {
+            //            d = DefType.String;
+            //        }
+            //        checkVar(d, name, ref value);
+            //        FlowPart fp = new definePart(d, name, value)
+            //        {
+            //            compoId = View.GenerateViewId(),
+            //            index = codeBlock.Count
+            //        };
+            //        codeBlock.Add(fp);
+            //        varList.Add(name);
+            //        Button defflow = new Button(this)
+            //        {
+            //            Text = "선언",
+            //            Tag = codeBlock.Count - 1,
+            //            Id = fp.compoId
+            //        };
+            //        defflow.SetTextColor(Color.Rgb(0, 0, 0));
+            //        defflow.SetBackgroundColor(Color.Rgb(128, 0, 128));
+            //        defflow.SetMinHeight(width / 5);
+            //        defflow.SetMinWidth(width / 5);
+            //        defflow.SetTextSize(ComplexUnitType.Dip, 25);
+            //        defflow.Click += (sednder, Dialo) =>
+            //        {
+            //            int index = Convert.ToInt32(((Button)sednder).Tag.ToString());
+            //            View la = LayoutInflater.Inflate(Resource.Layout.defSetting, null);
+            //            dialog.SetView(la);
+            //            EditText vV = (EditText)la.FindViewById(Resource.Id.varValue),
+            //            vN = (EditText)la.FindViewById(Resource.Id.varName);
+            //            RadioButton vNu = (RadioButton)la.FindViewById(Resource.Id.varNumber),
+            //            vSt = (RadioButton)la.FindViewById(Resource.Id.varString);
+            //            vV.Text = ((definePart)codeBlock[index]).defValue;
+            //            vN.Text = ((definePart)codeBlock[index]).defName;
+            //            LinearLayout ll = (LinearLayout)la.RootView;
+            //            Button delb = new Button(this) { Text = "삭제" };
+            //            delb.SetBackgroundColor(Color.Rgb(255, 0, 0));
+            //            delb.SetTextColor(Color.Rgb(0, 0, 0));
+            //            delb.Click += delegate
+            //            {
+            //                codeBlock.RemoveAt(index);
+            //                gridflow.RemoveViewAt(index);
+            //                dialogger.Cancel();
+            //            };
+            //            ll.AddView(delb);
 
-                        if (((definePart)codeBlock[index]).defType == DefType.Number)
-                        {
-                            vNu.Checked = true;
-                        }
-                        else if (vSt.Checked)
-                        {
-                            vSt.Checked = true;
-                        }
+            //            if (((definePart)codeBlock[index]).defType == DefType.Number)
+            //            {
+            //                vNu.Checked = true;
+            //            }
+            //            else if (vSt.Checked)
+            //            {
+            //                vSt.Checked = true;
+            //            }
 
-                        dialog.SetPositiveButton(Android.Resource.String.Ok, delegate
-                        {
-                            string v = vV.Text;
-                            string n = vN.Text;
-                            DefType dd = new DefType();
-                            if (vNu.Checked)
-                            {
-                                dd = DefType.Number;
-                            }
-                            else if (vSt.Checked)
-                            {
-                                dd = DefType.String;
-                            }
-                            try
-                            {
-                                checkVar(dd, n, ref v);
-                                codeBlock[index] = new definePart(dd, n, v);
-                            }
-                            catch (Exception ee)
-                            {
-                                Toast.MakeText(this, ee.Message, ToastLength.Long).Show();
-                            }
-                        });
-                        dialogger = dialog.Create();
-                        dialogger.Show();
-                    };
-                    gridflow.AddView(defflow);
-                }
-                catch (Exception ee)
-                {
-                    Toast.MakeText(this, ee.Message, ToastLength.Long).Show();
-                }
-            });
+            //            dialog.SetPositiveButton(Android.Resource.String.Ok, delegate
+            //            {
+            //                string v = vV.Text;
+            //                string n = vN.Text;
+            //                DefType dd = new DefType();
+            //                if (vNu.Checked)
+            //                {
+            //                    dd = DefType.Number;
+            //                }
+            //                else if (vSt.Checked)
+            //                {
+            //                    dd = DefType.String;
+            //                }
+            //                try
+            //                {
+            //                    checkVar(dd, n, ref v);
+            //                    codeBlock[index] = new definePart(dd, n, v);
+            //                }
+            //                catch (Exception ee)
+            //                {
+            //                    Toast.MakeText(this, ee.Message, ToastLength.Long).Show();
+            //                }
+            //            });
+            //            dialogger = dialog.Create();
+            //            dialogger.Show();
+            //        };
+            //        gridflow.AddView(defflow);
+            //    }
+            //    catch (Exception ee)
+            //    {
+            //        Toast.MakeText(this, ee.Message, ToastLength.Long).Show();
+            //    }
+            //});
+#endregion
             dialogger = dialog.Create();
             dialogger.Show();
         }

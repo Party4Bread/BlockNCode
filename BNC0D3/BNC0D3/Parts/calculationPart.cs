@@ -28,7 +28,12 @@ namespace BNC0D3.Parts
 
         public override XmlElement XmlDigest(XmlDocument doc)
         {
-            throw new NotImplementedException();
+            int locationOfequal = formula.IndexOf('=');
+            XmlElement defElement = doc.CreateElement("calc");
+            defElement.InnerText = formula.Substring(locationOfequal + 1, formula.Length - locationOfequal - 1) + "="
+                + formula.Substring(0, locationOfequal);
+            return defElement;
+            
         }
     }
 }

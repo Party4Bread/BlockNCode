@@ -63,6 +63,8 @@ namespace BNC0D3
 			global::AndroidHUD.Resource.Styleable.ProgressWheel_ahText = global::BNC0D3.Resource.Styleable.ProgressWheel_ahText;
 			global::AndroidHUD.Resource.Styleable.ProgressWheel_ahTextColor = global::BNC0D3.Resource.Styleable.ProgressWheel_ahTextColor;
 			global::AndroidHUD.Resource.Styleable.ProgressWheel_ahTextSize = global::BNC0D3.Resource.Styleable.ProgressWheel_ahTextSize;
+			global::BreadMachine.Resource.String.ApplicationName = global::BNC0D3.Resource.String.ApplicationName;
+			global::BreadMachine.Resource.String.Hello = global::BNC0D3.Resource.String.Hello;
 			global::Splat.Resource.String.library_name = global::BNC0D3.Resource.String.library_name;
 			global::Vaquita4android.Resource.String.ApplicationName = global::BNC0D3.Resource.String.ApplicationName;
 			global::Vaquita4android.Resource.String.Hello = global::BNC0D3.Resource.String.Hello;
@@ -173,101 +175,83 @@ namespace BNC0D3
 			// aapt resource value: 0x7f060000
 			public const int MenuName = 2131099648;
 			
-			// aapt resource value: 0x7f060013
-			public const int calc_button = 2131099667;
+			// aapt resource value: 0x7f06000a
+			public const int calc_button = 2131099658;
 			
-			// aapt resource value: 0x7f06001d
-			public const int consoleIpt = 2131099677;
+			// aapt resource value: 0x7f060015
+			public const int consoleIpt = 2131099669;
 			
-			// aapt resource value: 0x7f06001c
-			public const int consoleOpt = 2131099676;
+			// aapt resource value: 0x7f060014
+			public const int consoleOpt = 2131099668;
 			
-			// aapt resource value: 0x7f06001e
-			public const int consoleSummit = 2131099678;
+			// aapt resource value: 0x7f060016
+			public const int consoleSummit = 2131099670;
 			
-			// aapt resource value: 0x7f060019
-			public const int content = 2131099673;
+			// aapt resource value: 0x7f060011
+			public const int content = 2131099665;
 			
-			// aapt resource value: 0x7f060012
-			public const int def_button = 2131099666;
+			// aapt resource value: 0x7f06000f
+			public const int def_button = 2131099663;
 			
-			// aapt resource value: 0x7f06000c
-			public const int exitbtn = 2131099660;
+			// aapt resource value: 0x7f060004
+			public const int exitbtn = 2131099652;
 			
 			// aapt resource value: 0x7f060001
 			public const int formular = 2131099649;
 			
-			// aapt resource value: 0x7f060018
-			public const int gridView1 = 2131099672;
-			
-			// aapt resource value: 0x7f06001a
-			public const int handle = 2131099674;
-			
-			// aapt resource value: 0x7f060011
-			public const int horizontalScrollView1 = 2131099665;
-			
-			// aapt resource value: 0x7f06001f
-			public const int linearLayout1 = 2131099679;
-			
-			// aapt resource value: 0x7f060016
-			public const int load_button = 2131099670;
-			
-			// aapt resource value: 0x7f06000f
-			public const int loadingImage = 2131099663;
-			
-			// aapt resource value: 0x7f06000d
-			public const int loadingProgressBar = 2131099661;
-			
 			// aapt resource value: 0x7f060010
-			public const int loadingProgressWheel = 2131099664;
+			public const int gridView1 = 2131099664;
 			
-			// aapt resource value: 0x7f060014
-			public const int opt_button = 2131099668;
-			
-			// aapt resource value: 0x7f06000b
-			public const int optbtn = 2131099659;
-			
-			// aapt resource value: 0x7f06000a
-			public const int playbtn = 2131099658;
-			
-			// aapt resource value: 0x7f060015
-			public const int save_button = 2131099669;
-			
-			// aapt resource value: 0x7f060020
-			public const int scSwitch = 2131099680;
-			
-			// aapt resource value: 0x7f060017
-			public const int scrollView1 = 2131099671;
-			
-			// aapt resource value: 0x7f06001b
-			public const int slidingDrawer1 = 2131099675;
-			
-			// aapt resource value: 0x7f060002
-			public const int textView1 = 2131099650;
-			
-			// aapt resource value: 0x7f060006
-			public const int textView2 = 2131099654;
-			
-			// aapt resource value: 0x7f060008
-			public const int textView3 = 2131099656;
-			
-			// aapt resource value: 0x7f06000e
-			public const int textViewStatus = 2131099662;
-			
-			// aapt resource value: 0x7f060003
-			public const int typeRadio = 2131099651;
-			
-			// aapt resource value: 0x7f060007
-			public const int varName = 2131099655;
-			
-			// aapt resource value: 0x7f060004
-			public const int varNumber = 2131099652;
-			
-			// aapt resource value: 0x7f060005
-			public const int varString = 2131099653;
+			// aapt resource value: 0x7f060012
+			public const int handle = 2131099666;
 			
 			// aapt resource value: 0x7f060009
-			public const int varValue = 2131099657;
+			public const int horizontalScrollView1 = 2131099657;
+			
+			// aapt resource value: 0x7f060017
+			public const int linearLayout1 = 2131099671;
+			
+			// aapt resource value: 0x7f06000d
+			public const int load_button = 2131099661;
+			
+			// aapt resource value: 0x7f060007
+			public const int loadingImage = 2131099655;
+			
+			// aapt resource value: 0x7f060005
+			public const int loadingProgressBar = 2131099653;
+			
+			// aapt resource value: 0x7f060008
+			public const int loadingProgressWheel = 2131099656;
+			
+			// aapt resource value: 0x7f06000b
+			public const int opt_button = 2131099659;
+			
+			// aapt resource value: 0x7f060003
+			public const int optbtn = 2131099651;
+			
+			// aapt resource value: 0x7f060002
+			public const int playbtn = 2131099650;
+			
+			// aapt resource value: 0x7f06000c
+			public const int save_button = 2131099660;
+			
+			// aapt resource value: 0x7f060019
+			public const int scSwitch = 2131099673;
+			
+			// aapt resource value: 0x7f06000e
+			public const int scrollView1 = 2131099662;
+			
+			// aapt resource value: 0x7f060013
+			public const int slidingDrawer1 = 2131099667;
+			
+			// aapt resource value: 0x7f060018
+			public const int textView1 = 2131099672;
+			
+			// aapt resource value: 0x7f06001a
+			public const int textView2 = 2131099674;
+			
+			// aapt resource value: 0x7f060006
+			public const int textViewStatus = 2131099654;
 			
 			static Id()
 			{

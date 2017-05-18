@@ -1,8 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DynamicExpresso;
-using System.Collections.Generic;
 using BreadMachine.Android;
-using System.Xml;
 
 namespace MachineTest1
 {
@@ -42,27 +40,28 @@ namespace MachineTest1
             Assert.AreEqual(129, interpreter.Eval("y"));
         }
         [TestMethod]
-        public void Machine1()
-        {
-            XmlDocument a = new XmlDocument();
-            a.LoadXml(@"<code>
-                <def type='0' value='23'>a</def>
-                <calc>a=a+12</calc>
-                <ivk type='0'>a</ivk>
-                </code>");
-            string ans="";
-            BMachine bm = new BMachine(a,(string sd)=> { ans = sd; });
-            bm.Step();
-            bm.Step();
-            bm.Step();
-            Assert.AreEqual("35", ans);
-        }
-        [TestMethod]
         public void splittest1()
         {
             string exp = "a=213+51";
            
             Assert.AreEqual(2,exp.Split('=').Length);
+        }
+
+
+        [TestMethod]
+        public void Machine1()
+        {
+
+            string ans = ";";
+            BMachine bm = new BMachine(@"<code>
+                <def type='0' value='23'>a</def>
+                <calc>a=a+12</calc>
+                <ivk type='0'>a</ivk>
+                </code>", (string sd) => { ans = sd; });
+            bm.Step();
+            bm.Step();
+            bm.Step();
+            Assert.AreEqual("35", ans);
         }
     }
 }

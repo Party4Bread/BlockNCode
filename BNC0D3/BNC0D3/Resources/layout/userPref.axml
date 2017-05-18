@@ -21,4 +21,10 @@
             android:layout_height="match_parent"
             android:id="@+id/scSwitch" />
     </LinearLayout>
+    <TextView
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2" />
 </LinearLayout>

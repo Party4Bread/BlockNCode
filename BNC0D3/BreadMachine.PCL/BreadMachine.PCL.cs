@@ -3,25 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace BreadMachine.Android
+namespace BreadMachine.PCL
 {
     public enum Status
     {
         Running, Stop, Pause, WaitForInput
     }
-    /*
-    struct Variable
-    {
-        string name;
-        string value;
-        bool isString;
-        public Variable(string name, string value, bool isString)
-        {
-            this.name = name;
-            this.value = value;
-            this.isString = isString;
-        }
-    }*/
     public class BMachine : IDisposable
     {
         int blockPoint;
@@ -29,19 +16,18 @@ namespace BreadMachine.Android
         List<XElement> codeList;
         Action<string> onPrint;
         Status status;
-        //List<Variable> varList;
         Interpreter evaler;
         public BMachine(string codeBlock, Action<string> onPrint = null)
         {
             blockPoint = 0;
-            currentCode=XDocument.Parse(codeBlock);
-            codeList = new List<XElement>(currentCode.Root.Elements());
+            currentCode = XDocument.Parse(codeBlock);
+            codeList = currentCode.Root.Descendants() as List<XElement>;
             //varList = new List<Variable>();
             status = Status.Stop;
             this.onPrint = onPrint;
             evaler = new Interpreter();
         }
-        public BMachine(XDocument codeBlock, Action<string> onPrint=null)
+        public BMachine(XDocument codeBlock, Action<string> onPrint = null)
         {
             blockPoint = 0;
             currentCode = codeBlock;
@@ -55,10 +41,10 @@ namespace BreadMachine.Android
         public void Step()
         {
             XElement curline = codeList[blockPoint++];
-            switch(curline.Name.LocalName)
+            switch (curline.Name.LocalName)
             {
                 case "def":
-                    if(curline.Attribute("type").Value == "0")
+                    if (curline.Attribute("type").Value == "0")
                     {
                         evaler.SetVariable(curline.Value, long.Parse(curline.Attribute("value").Value));
                     }
@@ -68,7 +54,7 @@ namespace BreadMachine.Android
                     }
                     break;
                 case "calc":
-                    evaler.SetVariable(curline.Value.Split('=')[0],evaler.Eval(curline.Value.Split('=')[1]));
+                    evaler.SetVariable(curline.Value.Split('=')[0], evaler.Eval(curline.Value.Split('=')[1]));
                     break;
                 case "ivk":
                     Ivk(curline);
@@ -78,10 +64,10 @@ namespace BreadMachine.Android
 
         private void Ivk(XElement ivkCmd)
         {
-            switch(ivkCmd.Attribute("type").Value)
+            switch (ivkCmd.Attribute("type").Value)
             {
                 case "0":
-                    onPrint?.Invoke(evaler.Eval<object>(ivkCmd.Value).ToString());
+                    onPrint?.Invoke(evaler.Eval<string>(ivkCmd.Value));
                     break;
                 case "1":
 
@@ -91,7 +77,7 @@ namespace BreadMachine.Android
 
         public void Run()
         {
-            
+
         }
 
         #region IDisposable implementation with finalizer

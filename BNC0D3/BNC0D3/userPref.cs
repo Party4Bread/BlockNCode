@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.Preferences;
+using BreadMachine.Android;
 
 namespace BNC0D3
 {
@@ -23,6 +24,8 @@ namespace BNC0D3
             Switch codeswitch = FindViewById<Switch>(Resource.Id.scSwitch);
             codeswitch.Checked=Application.Context.GetSharedPreferences("BNCODE", FileCreationMode.Private).GetBoolean("codeShow", false);
             codeswitch.CheckedChange += Codeswitch_CheckedChange;
+            TextView tv2 = FindViewById<TextView>(Resource.Id.textView2);
+            
             // Create your application here
         }
 
