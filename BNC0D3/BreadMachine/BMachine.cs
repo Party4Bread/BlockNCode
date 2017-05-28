@@ -8,7 +8,7 @@ namespace BreadMachine.Android
 {
     public enum Status
     {
-        Running, Stop, Pause, WaitForInput
+        Running, Stop, Pause, WaitForInput, Break
     }
     /*
     struct Variable
@@ -35,14 +35,14 @@ namespace BreadMachine.Android
         public BMachine(string codeBlock, Action<string> onPrint = null)
         {
             blockPoint = 0;
-            currentCode=XDocument.Parse(codeBlock);
+            currentCode = XDocument.Parse(codeBlock);
             codeList = new List<XElement>(currentCode.Root.Elements());
             //varList = new List<Variable>();
             status = Status.Stop;
             this.onPrint = onPrint;
             evaler = new Interpreter();
         }
-        public BMachine(XDocument codeBlock, Action<string> onPrint=null)
+        public BMachine(XDocument codeBlock, Action<string> onPrint = null)
         {
             blockPoint = 0;
             currentCode = codeBlock;
@@ -56,10 +56,10 @@ namespace BreadMachine.Android
         public void Step()
         {
             XElement curline = codeList[blockPoint++];
-            switch(curline.Name.LocalName)
+            switch (curline.Name.LocalName)
             {
                 case "def":
-                    if(curline.Attribute("type").Value == "0")
+                    if (curline.Attribute("type").Value == "0")
                     {
                         evaler.SetVariable(curline.Value, long.Parse(curline.Attribute("value").Value));
                     }
@@ -69,12 +69,12 @@ namespace BreadMachine.Android
                     }
                     break;
                 case "calc":
-                    evaler.SetVariable(curline.Value.Split('=')[0],evaler.Eval(curline.Value.Split('=')[1]));
+                    evaler.SetVariable(curline.Value.Split('=')[0], evaler.Eval(curline.Value.Split('=')[1]));
                     break;
                 case "sel":
-                    if(curline.Attribute("else").Value=="false")
+                    if (curline.Attribute("else").Value == "false")
                     {
-                        if(evaler.Eval<bool>(curline.Attribute("con").Value))
+                        if (evaler.Eval<bool>(curline.Attribute("con").Value))
                         {
                             BMachine ifBm = new BMachine(new XDocument(curline.Elements().First()), onPrint);
                             ifBm.evaler = this.evaler;
@@ -100,15 +100,29 @@ namespace BreadMachine.Android
                         }
                     }
                     break;
+                case "loop":
+                    while(evaler.Eval<bool>(curline.Attribute("con").Value))
+                    {
+                        BMachine loopBm = new BMachine(new XDocument(curline.Elements().First()), onPrint);
+                        loopBm.evaler = this.evaler;
+                        loopBm.Run();
+                        evaler = loopBm.evaler;
+                        if (loopBm.status == Status.Break)
+                            break;
+                    }
+                    break;
                 case "ivk":
                     Ivk(curline);
+                    break;
+                case "break":
+                    status = Status.Break;                    
                     break;
             }
         }
 
         private void Ivk(XElement ivkCmd)
         {
-            switch(ivkCmd.Attribute("type").Value)
+            switch (ivkCmd.Attribute("type").Value)
             {
                 case "0":
                     onPrint?.Invoke(evaler.Eval<object>(ivkCmd.Value).ToString());
@@ -121,9 +135,11 @@ namespace BreadMachine.Android
 
         public void Run()
         {
-            foreach(var meaningless_val in codeList)
+            foreach (var meaningless_val in codeList)
             {
-                Step();
+                if (status == Status.Break)
+                    break;
+                    Step();
             }
         }
 
