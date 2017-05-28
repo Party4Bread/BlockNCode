@@ -1,6 +1,7 @@
 ﻿using DynamicExpresso;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace BreadMachine.Android
@@ -45,7 +46,7 @@ namespace BreadMachine.Android
         {
             blockPoint = 0;
             currentCode = codeBlock;
-            codeList = codeBlock.Root.Descendants() as List<XElement>;
+            codeList = new List<XElement>(codeBlock.Root.Elements());
             //varList = new List<Variable>();
             status = Status.Stop;
             this.onPrint = onPrint;
@@ -69,6 +70,35 @@ namespace BreadMachine.Android
                     break;
                 case "calc":
                     evaler.SetVariable(curline.Value.Split('=')[0],evaler.Eval(curline.Value.Split('=')[1]));
+                    break;
+                case "sel":
+                    if(curline.Attribute("else").Value=="false")
+                    {
+                        if(evaler.Eval<bool>(curline.Attribute("con").Value))
+                        {
+                            BMachine ifBm = new BMachine(new XDocument(curline.Elements().First()), onPrint);
+                            ifBm.evaler = this.evaler;
+                            ifBm.Run();
+                            evaler = ifBm.evaler;
+                        }
+                    }
+                    else
+                    {
+                        if (evaler.Eval<bool>(curline.Attribute("con").Value))
+                        {
+                            BMachine ifBm = new BMachine(new XDocument(curline.Elements().First()), onPrint);
+                            ifBm.evaler = evaler;
+                            ifBm.Run();
+                            evaler = ifBm.evaler;
+                        }
+                        else
+                        {
+                            BMachine ifBm = new BMachine(new XDocument(curline.Elements().Skip(1).First()), onPrint);
+                            ifBm.evaler = evaler;
+                            ifBm.Run();
+                            evaler = ifBm.evaler;
+                        }
+                    }
                     break;
                 case "ivk":
                     Ivk(curline);

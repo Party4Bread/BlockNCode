@@ -17,6 +17,12 @@ using BreadMachine.Android;
 
 namespace BNC0D3
 {
+    struct variable
+    {
+        public int id;
+        public string name;
+        public enum type {number,letter};
+    }
     [Activity(ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait,Label = "BNC0D3", WindowSoftInputMode = Android.Views.SoftInput.AdjustPan | Android.Views.SoftInput.StateVisible, Theme = "@android:style/Theme.NoTitleBar")]
     public class MainActivity : Activity
     {
@@ -36,7 +42,7 @@ namespace BNC0D3
         AlertDialog.Builder dialog;
         AlertDialog dialogger;
         public GridLayout gridflow { get; private set; }
-        List<string> varList;
+        List<variable> varList;
         private Button loadbtn;
         #endregion
         protected override void OnCreate(Bundle bundle)
@@ -66,7 +72,7 @@ namespace BNC0D3
             conIpt.ImeOptions = Android.Views.InputMethods.ImeAction.Done;
             //value4code
             codeBlock = new List<FlowPart>();
-            varList = new List<string>();
+            varList = new List<variable>();
             #endregion
 
             #region COMPONENT_EVENT
@@ -148,6 +154,8 @@ namespace BNC0D3
         private void Defbtn_Click(object s, EventArgs eA)
         {
             View layout = LayoutInflater.Inflate(Resource.Layout.defSetting, null);
+            LinearLayout ll = layout.FindViewById<LinearLayout>(Resource.Id.defRoot);
+            //foreach( varList)
             dialog.SetView(layout);
             #region temp
             //EditText varValue = (EditText)layout.FindViewById(Resource.Id.varValue),
@@ -453,12 +461,17 @@ namespace BNC0D3
         #endregion
 
         #region CHECK_FUNCTION
-        bool checkFormular(List<string> var, string s)
+        bool checkFormular(List<variable> vars, string s)
         {
             string st = s;
+            List<string> var = new List<string>();
             List<String> v = new List<String>();
             List<String> o = new List<String>();
             List<String> op = new List<String>();
+            foreach(variable i in vars)
+            {
+                var.Add(i.name);
+            }
             op.Add("+");
             op.Add("-");
             op.Add("*");
@@ -522,6 +535,7 @@ namespace BNC0D3
             }
 
             v.Sort();
+            
             var.Sort();
             if (!o.Contains("="))
             {

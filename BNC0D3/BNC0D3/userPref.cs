@@ -25,7 +25,8 @@ namespace BNC0D3
             codeswitch.Checked=Application.Context.GetSharedPreferences("BNCODE", FileCreationMode.Private).GetBoolean("codeShow", false);
             codeswitch.CheckedChange += Codeswitch_CheckedChange;
             TextView tv2 = FindViewById<TextView>(Resource.Id.textView2);
-            
+            BMachine bm = new BMachine(@"<code><sel con='1==1' else='false'><code><ivk type='0'>1212</ivk></code></sel></code>", (string i) => { tv2.Text += i; });
+            bm.Run();
             // Create your application here
         }
 

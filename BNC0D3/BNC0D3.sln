@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26510.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BNC0D3", "BNC0D3\BNC0D3.csproj", "{A8F1B4FA-027B-40B0-8BB1-0DBBF7E5BF17}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vaquita4android", "Vaquita4android\Vaquita4android.csproj", "{E021CA2E-E5F4-4033-9DD0-7D9BFB81086F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreadMachine", "BreadMachine\BreadMachine.csproj", "{CCA8E44D-8D50-44F8-ABB8-D712956372CD}"
 EndProject
@@ -25,10 +23,6 @@ Global
 		{A8F1B4FA-027B-40B0-8BB1-0DBBF7E5BF17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8F1B4FA-027B-40B0-8BB1-0DBBF7E5BF17}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A8F1B4FA-027B-40B0-8BB1-0DBBF7E5BF17}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{E021CA2E-E5F4-4033-9DD0-7D9BFB81086F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E021CA2E-E5F4-4033-9DD0-7D9BFB81086F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E021CA2E-E5F4-4033-9DD0-7D9BFB81086F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E021CA2E-E5F4-4033-9DD0-7D9BFB81086F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CCA8E44D-8D50-44F8-ABB8-D712956372CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CCA8E44D-8D50-44F8-ABB8-D712956372CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCA8E44D-8D50-44F8-ABB8-D712956372CD}.Release|Any CPU.ActiveCfg = Release|Any CPU

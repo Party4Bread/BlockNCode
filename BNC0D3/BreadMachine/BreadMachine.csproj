@@ -35,7 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
     <Reference Include="System" />
@@ -56,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DynamicExpresso.Android\DynamicExpresso.Android.csproj">
-      <Project>{49B22EAA-C64A-4D74-BBA9-8E955123DDAE}</Project>
+      <Project>{49b22eaa-c64a-4d74-bba9-8e955123ddae}</Project>
       <Name>DynamicExpresso.Android</Name>
     </ProjectReference>
   </ItemGroup>

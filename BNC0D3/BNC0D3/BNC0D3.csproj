@@ -92,7 +92,6 @@
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="userPref.cs" />
-    <Compile Include="VmVaquit.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GettingStarted.Xamarin" />
@@ -133,10 +132,6 @@
     <ProjectReference Include="..\BreadMachine\BreadMachine.csproj">
       <Project>{CCA8E44D-8D50-44F8-ABB8-D712956372CD}</Project>
       <Name>BreadMachine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Vaquita4android\Vaquita4android.csproj">
-      <Project>{e021ca2e-e5f4-4033-9dd0-7d9bfb81086f}</Project>
-      <Name>Vaquita4android</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

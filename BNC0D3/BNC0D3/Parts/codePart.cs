@@ -27,7 +27,13 @@ namespace BNC0D3.Parts
 
         public override XmlElement XmlDigest(XmlDocument doc)
         {
-            throw new NotImplementedException();
+            string codeExport = "";
+            XmlElement xmlcode = doc.CreateElement("code");
+            foreach (FlowPart part in code)
+            {
+                xmlcode.AppendChild(part.XmlDigest(doc));
+            }
+            return xmlcode;
         }
     }
 }

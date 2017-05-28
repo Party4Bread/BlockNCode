@@ -32,7 +32,21 @@ namespace BNC0D3.Parts
 
         public override XmlElement XmlDigest(XmlDocument doc)
         {
-            throw new NotImplementedException();
+            XmlElement xmlcode = doc.CreateElement("sel");
+            if (!elsestate)
+            {
+                xmlcode.SetAttribute("con", condition);
+                xmlcode.AppendChild(truePart.XmlDigest(doc));
+                xmlcode.SetAttribute("else", "false");
+            }
+            else
+            {
+                xmlcode.SetAttribute("con",condition);
+                xmlcode.AppendChild(truePart.XmlDigest(doc));
+                xmlcode.AppendChild(falsePart.XmlDigest(doc));
+                xmlcode.SetAttribute("else", "true");
+            }
+            return xmlcode;
         }
     }
 }
