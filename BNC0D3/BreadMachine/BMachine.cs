@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Xml.Linq;
 
 namespace BreadMachine.Android
@@ -29,7 +30,11 @@ namespace BreadMachine.Android
         XDocument currentCode;
         List<XElement> codeList;
         Action<string> onPrint;
-        Status status;
+        public Status status;
+        string input = "";
+        string inputreadyvarname = "";
+        Inputtype inputt;
+        enum Inputtype { number, str };
         //List<Variable> varList;
         Interpreter evaler;
         public BMachine(string codeBlock, Action<string> onPrint = null)
@@ -78,7 +83,7 @@ namespace BreadMachine.Android
                         {
                             BMachine ifBm = new BMachine(new XDocument(curline.Elements().First()), onPrint);
                             ifBm.evaler = this.evaler;
-                            ifBm.Run();
+                            ifBm.Runner();
                             evaler = ifBm.evaler;
                         }
                     }
@@ -88,24 +93,24 @@ namespace BreadMachine.Android
                         {
                             BMachine ifBm = new BMachine(new XDocument(curline.Elements().First()), onPrint);
                             ifBm.evaler = evaler;
-                            ifBm.Run();
+                            ifBm.Runner();
                             evaler = ifBm.evaler;
                         }
                         else
                         {
                             BMachine ifBm = new BMachine(new XDocument(curline.Elements().Skip(1).First()), onPrint);
                             ifBm.evaler = evaler;
-                            ifBm.Run();
+                            ifBm.Runner();
                             evaler = ifBm.evaler;
                         }
                     }
                     break;
                 case "loop":
-                    while(evaler.Eval<bool>(curline.Attribute("con").Value))
+                    while (evaler.Eval<bool>(curline.Attribute("con").Value))
                     {
                         BMachine loopBm = new BMachine(new XDocument(curline.Elements().First()), onPrint);
                         loopBm.evaler = this.evaler;
-                        loopBm.Run();
+                        loopBm.Runner();
                         evaler = loopBm.evaler;
                         if (loopBm.status == Status.Break)
                             break;
@@ -115,8 +120,33 @@ namespace BreadMachine.Android
                     Ivk(curline);
                     break;
                 case "break":
-                    status = Status.Break;                    
+                    status = Status.Break;
                     break;
+            }
+        }
+
+        public bool Input(string a)
+        {
+            input = status == Status.WaitForInput ? a : input;
+            return status == Status.WaitForInput;
+        }
+
+        private void WaitForInput()
+        {
+            while (input == "") { }
+            status = Status.Running;
+            gotInput();
+        }
+
+        private void gotInput()
+        {
+            if (inputt == Inputtype.number)
+            {
+                evaler.SetVariable(inputreadyvarname, long.Parse(input));
+            }
+            else
+            {
+                evaler.SetVariable(inputreadyvarname, input);
             }
         }
 
@@ -128,23 +158,39 @@ namespace BreadMachine.Android
                     onPrint?.Invoke(evaler.Eval<object>(ivkCmd.Value).ToString());
                     break;
                 case "1":
-
+                    status = Status.WaitForInput;
+                    inputreadyvarname = ivkCmd.Value;
+                    inputt = ivkCmd.Attribute("vtype").Value == "0" ? Inputtype.number : Inputtype.str;
+                    WaitForInput();
                     break;
             }
         }
-
         public void Run()
         {
+            ThreadStart s = new ThreadStart(() => Runner());
+            mainThread = new Thread(s);
+            mainThread.Start();
+        }
+        void Runner()
+        {
+            object lockObject = new object();
             foreach (var meaningless_val in codeList)
             {
                 if (status == Status.Break)
                     break;
+                lock (lockObject)
+                {
                     Step();
+                }
             }
+
+            status = Status.Stop;
         }
 
         #region IDisposable implementation with finalizer
         private bool isDisposed = false;
+        private Thread mainThread;
+
         public void Dispose() { Dispose(true); GC.SuppressFinalize(this); }
         protected virtual void Dispose(bool disposing)
         {

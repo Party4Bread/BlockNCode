@@ -11,6 +11,7 @@ using Android.Views;
 using Android.Widget;
 using Android.Preferences;
 using BreadMachine.Android;
+using System.Threading.Tasks;
 
 namespace BNC0D3
 {
@@ -27,16 +28,20 @@ namespace BNC0D3
             TextView tv2 = FindViewById<TextView>(Resource.Id.textView2);
             BMachine bm = new BMachine(@"<code>
 <def type='0' value='0'>a</def>
-<def type='0' value='0'>sum</def>
-<loop con='a&lt;10'>
+<def type='0' value='0'>i</def>
+<ivk type='1' vtype='0'>a</ivk>
+<loop con='i&lt;10'>
 <code>
-<calc>a=a+1</calc>
-<calc>sum=sum+a</calc>
-<ivk type='0'>sum</ivk>
+<calc>i=i+1</calc>
+<ivk type='0'>(a*i).ToString()+""=""+a.ToString()+""*""+i.ToString()</ivk>
 </code>
 </loop>
-</code> ", (string i) => { tv2.Text += i+ System.Environment.NewLine; });
+</code> ", (string i) => {RunOnUiThread(()=> { tv2.Text += i + System.Environment.NewLine; }); });
             bm.Run();
+            while (bm.status!=Status.WaitForInput)
+            {
+            }
+            bm.Input("5");   
             // Create your application here
         }
 
