@@ -44,6 +44,7 @@ namespace BNC0D3
         public GridLayout gridflow { get; private set; }
         List<variable> varList;
         private Button loadbtn;
+        private BMachine vm;
         #endregion
         protected override void OnCreate(Bundle bundle)
         {
@@ -78,7 +79,7 @@ namespace BNC0D3
             #region COMPONENT_EVENT
             conIpt.EditorAction += ConIpt_EditorAction;
             slider.DrawerOpen += Slider_DrawerOpen;
-            slider.DrawerClose += delegate { m_Adapter.Clear(); };
+            slider.DrawerClose += Slider_DrawerClose; ;
             consumit.Click += Consumit_Click;
             defbtn.Click += Defbtn_Click;
             calcbtn.Click += Calcbtn_Click;
@@ -97,6 +98,8 @@ namespace BNC0D3
             };
             ll.AddView(delb);*/
         }
+
+
 
         private async void Loadbtn_ClickAsync(object sender, EventArgs e)
         {
@@ -155,7 +158,13 @@ namespace BNC0D3
         {
             View layout = LayoutInflater.Inflate(Resource.Layout.defSetting, null);
             LinearLayout ll = layout.FindViewById<LinearLayout>(Resource.Id.defRoot);
-            //foreach( varList)
+            foreach(var i in varList)
+            {
+                var vl = LayoutInflater.Inflate(Resource.Layout.defVarPart, null);
+                LinearLayout vll = vl.FindViewById<LinearLayout>(Resource.Id.dvRoot);
+                vll.Id = i.id;
+                ll.AddView(vl);
+            }
             dialog.SetView(layout);
             #region temp
             //EditText varValue = (EditText)layout.FindViewById(Resource.Id.varValue),
@@ -285,7 +294,7 @@ namespace BNC0D3
                     cd.AppendChild(i.XmlDigest(code));
                 }
                 code.AppendChild(cd);
-                BMachine vm = new BMachine(code.OuterXml, (string o) => { m_Adapter.Add(o); });
+                vm = new BMachine(code.OuterXml, (string o) => { m_Adapter.Add(o); });
                 vm.Run();
                 /*
                 Vaquita4android.Parser parser = new Vaquita4android.Parser();
@@ -294,6 +303,12 @@ namespace BNC0D3
                 VTvm.vm.onPrint += (object o) => { m_Adapter.Add(o.ToString()); };
                 VTvm.vm.run();*/
             }
+        }
+
+        private void Slider_DrawerClose(object sender, EventArgs e)
+        {
+            m_Adapter.Clear();
+            vm.Dispose();
         }
 
         private void Optbtn_Click(object s, EventArgs eA)

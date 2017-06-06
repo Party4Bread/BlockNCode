@@ -11,35 +11,43 @@ namespace BreadMachine.Android
     {
         Running, Stop, Pause, WaitForInput, Break
     }
-    /*
-    struct Variable
-    {
-        string name;
-        string value;
-        bool isString;
-        public Variable(string name, string value, bool isString)
-        {
-            this.name = name;
-            this.value = value;
-            this.isString = isString;
-        }
-    }*/
+    enum Inputtype { number, str };
     public class BMachine : IDisposable
     {
-        int blockPoint;
-        XDocument currentCode;
-        List<XElement> codeList;
-        Action<string> onPrint;
+        /// <summary>
+        /// 현재 진행중인 블럭의 위치를 알려줍니다.
+        /// </summary>
+        public int blockPoint;
+
+        private XDocument currentCode;
+        private List<XElement> codeList;
+
+        /// <summary>
+        /// 출력 호출시 사용될 함수입니다.
+        /// </summary>
+        public Action<string> onPrint;
+
+        /// <summary>
+        /// 가상머신의 상태입니다
+        /// </summary>
         public Status status;
-        string input = "";
-        string inputreadyvarname = "";
-        Inputtype inputt;
-        enum Inputtype { number, str };
-        //List<Variable> varList;
-        Interpreter evaler;
+
+
+        /// <summary>
+        /// 코드가 subMachine에있는지 알려줍니다
+        /// </summary>
+        bool isSub;
+
+        private string input = "";
+        private string inputreadyvarname = "";
+        private Inputtype inputt;
+        private Interpreter evaler;
+        private BMachine subBm;
+
         public BMachine(string codeBlock, Action<string> onPrint = null)
         {
             blockPoint = 0;
+            isSub = false;
             currentCode = XDocument.Parse(codeBlock);
             codeList = new List<XElement>(currentCode.Root.Elements());
             //varList = new List<Variable>();
@@ -47,9 +55,11 @@ namespace BreadMachine.Android
             this.onPrint = onPrint;
             evaler = new Interpreter();
         }
+
         public BMachine(XDocument codeBlock, Action<string> onPrint = null)
         {
             blockPoint = 0;
+            isSub = false;
             currentCode = codeBlock;
             codeList = new List<XElement>(codeBlock.Root.Elements());
             //varList = new List<Variable>();
@@ -58,6 +68,9 @@ namespace BreadMachine.Android
             evaler = new Interpreter();
         }
 
+        /// <summary>
+        /// 코드를 한 블럭 실행시킵니다.
+        /// </summary>
         public void Step()
         {
             XElement curline = codeList[blockPoint++];
@@ -81,40 +94,46 @@ namespace BreadMachine.Android
                     {
                         if (evaler.Eval<bool>(curline.Attribute("con").Value))
                         {
-                            BMachine ifBm = new BMachine(new XDocument(curline.Elements().First()), onPrint);
-                            ifBm.evaler = this.evaler;
-                            ifBm.Runner();
-                            evaler = ifBm.evaler;
+                            subBm = new BMachine(new XDocument(curline.Elements().First()), onPrint);
+                            isSub = true;
+                            subBm.evaler = this.evaler;
+                            subBm.Runner();
+                            evaler = subBm.evaler;
                         }
                     }
                     else
                     {
                         if (evaler.Eval<bool>(curline.Attribute("con").Value))
                         {
-                            BMachine ifBm = new BMachine(new XDocument(curline.Elements().First()), onPrint);
-                            ifBm.evaler = evaler;
-                            ifBm.Runner();
-                            evaler = ifBm.evaler;
+                            subBm = new BMachine(new XDocument(curline.Elements().First()), onPrint);
+                            isSub = true;
+                            subBm.evaler = evaler;
+                            subBm.Runner();
+                            evaler = subBm.evaler;
                         }
                         else
                         {
-                            BMachine ifBm = new BMachine(new XDocument(curline.Elements().Skip(1).First()), onPrint);
-                            ifBm.evaler = evaler;
-                            ifBm.Runner();
-                            evaler = ifBm.evaler;
+                            subBm = new BMachine(new XDocument(curline.Elements().Skip(1).First()), onPrint);
+                            isSub = true;
+                            subBm.evaler = evaler;
+                            subBm.Runner();
+                            evaler = subBm.evaler;
                         }
                     }
+                    isSub = false;
                     break;
                 case "loop":
                     while (evaler.Eval<bool>(curline.Attribute("con").Value))
                     {
-                        BMachine loopBm = new BMachine(new XDocument(curline.Elements().First()), onPrint);
-                        loopBm.evaler = this.evaler;
-                        loopBm.Runner();
-                        evaler = loopBm.evaler;
-                        if (loopBm.status == Status.Break)
+                        subBm = new BMachine(new XDocument(curline.Elements().First()), onPrint);
+                        isSub = true;
+                        subBm.evaler = this.evaler;
+                        subBm.Runner();
+                        evaler = subBm.evaler;
+                        if (subBm.status == Status.Break)
                             break;
                     }
+                    isSub = false;
                     break;
                 case "ivk":
                     Ivk(curline);
@@ -125,10 +144,22 @@ namespace BreadMachine.Android
             }
         }
 
+        /// <summary>
+        /// 입력 대기중 실행되면 값을 입력합니다.
+        /// </summary>
+        /// <param name="a">입력될 값입니다</param>
+        /// <returns>true면 입력이 처리된겁니다</returns>
         public bool Input(string a)
         {
-            input = status == Status.WaitForInput ? a : input;
-            return status == Status.WaitForInput;
+            if(isSub)
+            {
+                return subBm.Input(a);
+            }
+            else
+            {
+                input = status == Status.WaitForInput ? a : input;
+                return status == Status.WaitForInput;
+            }
         }
 
         private void WaitForInput()
@@ -171,9 +202,11 @@ namespace BreadMachine.Android
             mainThread = new Thread(s);
             mainThread.Start();
         }
-        void Runner()
+
+        private void Runner()
         {
             object lockObject = new object();
+            status = Status.Running;
             foreach (var meaningless_val in codeList)
             {
                 if (status == Status.Break)
@@ -198,6 +231,7 @@ namespace BreadMachine.Android
             {
                 if (disposing)
                 {
+                    mainThread.Abort();
                     //if (_wplayer != null) _wplayer.Dispose();
                 }
             }
