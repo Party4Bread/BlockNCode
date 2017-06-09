@@ -30,4 +30,9 @@
         android:layout_height="match_parent"
         android:id="@+id/varValue"
         android:layout_weight="1" />
+    <Button
+        android:text="X"
+        android:layout_width="50dip"
+        android:layout_height="match_parent"
+        android:id="@+id/vardelbtn" />
 </LinearLayout>

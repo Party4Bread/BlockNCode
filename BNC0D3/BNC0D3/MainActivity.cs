@@ -17,11 +17,13 @@ using BreadMachine.Android;
 
 namespace BNC0D3
 {
+    public enum type { number, letter };
     struct variable
     {
         public int id;
         public string name;
-        public enum type {number,letter};
+        public object value;
+        public type type;
     }
     [Activity(ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait,Label = "BNC0D3", WindowSoftInputMode = Android.Views.SoftInput.AdjustPan | Android.Views.SoftInput.StateVisible, Theme = "@android:style/Theme.NoTitleBar")]
     public class MainActivity : Activity
@@ -163,6 +165,19 @@ namespace BNC0D3
                 var vl = LayoutInflater.Inflate(Resource.Layout.defVarPart, null);
                 LinearLayout vll = vl.FindViewById<LinearLayout>(Resource.Id.dvRoot);
                 vll.Id = i.id;
+                EditText varName = vll.FindViewById<EditText>(Resource.Id.varName);
+                EditText varValue = vll.FindViewById<EditText>(Resource.Id.varValue);
+                RadioButton str = vll.FindViewById<RadioButton>(Resource.Id.StrRadio);
+                RadioButton num = vll.FindViewById<RadioButton>(Resource.Id.NumRadio);
+                Button delBtn = vll.FindViewById<Button>(Resource.Id.vardelbtn);
+                varName.Text = i.name;
+                varValue.Text = i.value.ToString();
+                if (i.type == type.letter)
+                    str.Checked = true;
+                else
+                    num.Checked = true;
+                delBtn.Click += delegate { };
+                //아이디지정된 엘리먼트에 값추가.--- 기억:이건 있던 변수 추가하는것뿐
                 ll.AddView(vl);
             }
             dialog.SetView(layout);
@@ -271,6 +286,7 @@ namespace BNC0D3
             //    }
             //});
 #endregion
+            //완료 이벤트 개발 우선순위 1 변수초기화후 새로 다시추가 2 사용된 변수인지 체크
             dialogger = dialog.Create();
             dialogger.Show();
         }
