@@ -148,7 +148,7 @@ namespace BNC0D3
             dialogger.Show();
         }
 
-        #region component_Function
+         #region component_Function
         private void Consumit_Click(object sender, EventArgs e)
         {
             //VTvm.vm.io.read(conIpt.Text);
@@ -158,6 +158,7 @@ namespace BNC0D3
 
         private void Defbtn_Click(object s, EventArgs eA)
         {
+            List<variable> newVal = new List<variable>();
             View layout = LayoutInflater.Inflate(Resource.Layout.defSetting, null);
             LinearLayout ll = layout.FindViewById<LinearLayout>(Resource.Id.defRoot);
             foreach(var i in varList)
@@ -176,10 +177,30 @@ namespace BNC0D3
                     str.Checked = true;
                 else
                     num.Checked = true;
-                delBtn.Click += delegate { };
+                delBtn.Click += delegate { 
+                    //EVENT who is the the del 
+                };
                 //아이디지정된 엘리먼트에 값추가.--- 기억:이건 있던 변수 추가하는것뿐
                 ll.AddView(vl);
             }
+            Button addValBtn = new Button(ll.Context) { Text="변수추가" };
+            addValBtn.Click += delegate {
+                var vl = LayoutInflater.Inflate(Resource.Layout.defVarPart, null);
+                LinearLayout vll = vl.FindViewById<LinearLayout>(Resource.Id.dvRoot);
+                vll.Id = View.GenerateViewId();
+                EditText varName = vll.FindViewById<EditText>(Resource.Id.varName);
+                EditText varValue = vll.FindViewById<EditText>(Resource.Id.varValue);
+                RadioButton str = vll.FindViewById<RadioButton>(Resource.Id.StrRadio);
+                RadioButton num = vll.FindViewById<RadioButton>(Resource.Id.NumRadio);
+                Button delBtn = vll.FindViewById<Button>(Resource.Id.vardelbtn);
+                varName.Hint = "변수명";
+                varValue.Hint = "변수값"; 
+                delBtn.Click += delegate {
+                    //EVENT who is the the del 
+                };
+                ll.AddView(vl);
+            };
+            ll.AddView(addValBtn);  
             dialog.SetView(layout);
             #region temp
             //EditText varValue = (EditText)layout.FindViewById(Resource.Id.varValue),
