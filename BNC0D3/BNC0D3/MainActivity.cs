@@ -180,15 +180,18 @@ namespace BNC0D3
                 delBtn.Click += delegate { 
                     //EVENT who is the the del 
                 };
+                
                 //아이디지정된 엘리먼트에 값추가.--- 기억:이건 있던 변수 추가하는것뿐
                 ll.AddView(vl);
             }
             Button addValBtn = new Button(ll.Context) { Text="변수추가" };
             addValBtn.Click += delegate {
+                variable nv = new variable();
                 var vl = LayoutInflater.Inflate(Resource.Layout.defVarPart, null);
                 LinearLayout vll = vl.FindViewById<LinearLayout>(Resource.Id.dvRoot);
                 vll.Id = View.GenerateViewId();
-                EditText varName = vll.FindViewById<EditText>(Resource.Id.varName);
+                nv.id = vll.Id;
+                EditText varName = vll.FindViewById<EditText>(Resource.Id.varName);              
                 EditText varValue = vll.FindViewById<EditText>(Resource.Id.varValue);
                 RadioButton str = vll.FindViewById<RadioButton>(Resource.Id.StrRadio);
                 RadioButton num = vll.FindViewById<RadioButton>(Resource.Id.NumRadio);
@@ -202,6 +205,52 @@ namespace BNC0D3
             };
             ll.AddView(addValBtn);  
             dialog.SetView(layout);
+            dialog.SetPositiveButton(Android.Resource.String.Ok, (sender, e) => {
+                List<variable> oldvariable = varList;
+                varList = new List<variable>();
+                foreach(variable ov in oldvariable)
+                {
+                    variable sv = new variable();
+                    sv.name = ll.FindViewById<LinearLayout>(ov.id).FindViewById<EditText>(Resource.Id.varName).Text;
+                    sv.value = ll.FindViewById<LinearLayout>(ov.id).FindViewById<EditText>(Resource.Id.varValue).Text;
+                    sv.type = ll.FindViewById<LinearLayout>(ov.id).FindViewById<RadioButton>(Resource.Id.StrRadio).Checked ? type.letter : type.number;
+                    sv.id = ov.id;
+                    bool isExist = false;
+                    varList.ForEach((variable v) => {
+                        if (v.name == sv.name)
+                            isExist = true;
+                    });
+                    if (sv.name != "" && (string)sv.value != "" && !isExist)
+                    {
+                        varList.Add(sv);
+                    }
+                    else
+                    {
+                        // Toast 문제있소!
+                    }
+                }
+                foreach(variable nv in newVal)
+                {
+                    variable sv = new variable();
+                    sv.name = ll.FindViewById<LinearLayout>(nv.id).FindViewById<EditText>(Resource.Id.varName).Text;
+                    sv.value = ll.FindViewById<LinearLayout>(nv.id).FindViewById<EditText>(Resource.Id.varValue).Text;
+                    sv.type = ll.FindViewById<LinearLayout>(nv.id).FindViewById<RadioButton>(Resource.Id.StrRadio).Checked ? type.letter : type.number;
+                    sv.id = nv.id;
+                    bool isExist = false;
+                    varList.ForEach((variable v) => {
+                        if (v.name == sv.name)
+                            isExist = true;
+                    });
+                    if (sv.name != "" && (string)sv.value!="" && !isExist)
+                    {
+                        varList.Add(sv);
+                    }
+                    else
+                    {
+                        // Toast 문제있소!
+                    }
+                }                
+            });
             #region temp
             //EditText varValue = (EditText)layout.FindViewById(Resource.Id.varValue),
             //varName = (EditText)layout.FindViewById(Resource.Id.varName);
@@ -306,7 +355,7 @@ namespace BNC0D3
             //        Toast.MakeText(this, ee.Message, ToastLength.Long).Show();
             //    }
             //});
-#endregion
+            #endregion
             //완료 이벤트 개발 우선순위 1 변수초기화후 새로 다시추가 2 사용된 변수인지 체크
             dialogger = dialog.Create();
             dialogger.Show();
