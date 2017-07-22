@@ -1,57 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/defBack">
     <LinearLayout
         android:orientation="vertical"
-        android:id="@+id/defRoot"
-        android:layout_width="300dip"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <!--
-    <TextView
-        android:text="형식"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView1" />
-    <RadioGroup
-        android:minWidth="25px"
-        android:minHeight="25px"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/typeRadio">
-        <RadioButton
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/defRoot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <Button
+            android:text="변수추가"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="숫자"
-            android:id="@+id/varNumber" />
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="문자"
-            android:id="@+id/varString" />
-    </RadioGroup>
-    <TextView
-        android:text="변수명"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView2" />
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/varName" />
-    <TextView
-        android:text="값"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView3" />
-    <EditText
-        android:inputType="textMultiLine"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/varValue" />-->
+            android:id="@+id/varAddbtn" />
     </LinearLayout>
-</HorizontalScrollView>
+</ScrollView>

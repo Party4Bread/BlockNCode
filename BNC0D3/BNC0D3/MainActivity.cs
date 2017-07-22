@@ -14,6 +14,7 @@ using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
 using System.Text;
 using BreadMachine.Android;
+using Android.Views.InputMethods;
 
 namespace BNC0D3
 {
@@ -25,7 +26,7 @@ namespace BNC0D3
         public object value;
         public type type;
     }
-    [Activity(ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait,Label = "BNC0D3", WindowSoftInputMode = Android.Views.SoftInput.AdjustPan | Android.Views.SoftInput.StateVisible, Theme = "@android:style/Theme.NoTitleBar")]
+    [Activity(ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait,Label = "BNC0D3", WindowSoftInputMode = Android.Views.SoftInput.AdjustPan |SoftInput.StateAlwaysHidden, Theme = "@android:style/Theme.NoTitleBar")]
     public class MainActivity : Activity
     {
         #region CREATE_VAR
@@ -47,6 +48,7 @@ namespace BNC0D3
         List<variable> varList;
         private Button loadbtn;
         private BMachine vm;
+        InputMethodManager mgr;
         #endregion
         protected override void OnCreate(Bundle bundle)
         {
@@ -69,6 +71,7 @@ namespace BNC0D3
             dialog = new AlertDialog.Builder(this);
             WindowManager.DefaultDisplay.GetMetrics(displayMetrics);
             width = displayMetrics.WidthPixels;
+            mgr = (InputMethodManager)GetSystemService(InputMethodService);
             //preset
             m_Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1);
             conOpt.Adapter = m_Adapter;
@@ -161,49 +164,75 @@ namespace BNC0D3
             List<variable> newVal = new List<variable>();
             View layout = LayoutInflater.Inflate(Resource.Layout.defSetting, null);
             LinearLayout ll = layout.FindViewById<LinearLayout>(Resource.Id.defRoot);
-            foreach(var i in varList)
+
+            #region addExistingVars
+            foreach (var i in varList)
             {
-                var vl = LayoutInflater.Inflate(Resource.Layout.defVarPart, null);
-                LinearLayout vll = vl.FindViewById<LinearLayout>(Resource.Id.dvRoot);
-                vll.Id = i.id;
-                EditText varName = vll.FindViewById<EditText>(Resource.Id.varName);
-                EditText varValue = vll.FindViewById<EditText>(Resource.Id.varValue);
-                RadioButton str = vll.FindViewById<RadioButton>(Resource.Id.StrRadio);
-                RadioButton num = vll.FindViewById<RadioButton>(Resource.Id.NumRadio);
-                Button delBtn = vll.FindViewById<Button>(Resource.Id.vardelbtn);
+                var vl = LayoutInflater.Inflate(Resource.Layout.defVarFrag, null);
+                vl.Id = i.id;
+                TextView varName = vl.FindViewById<TextView>(Resource.Id.varNameFrag);
+                TextView varValue = vl.FindViewById<TextView>(Resource.Id.varValueFrag);
+                TextView varType = vl.FindViewById<TextView>(Resource.Id.varValueFrag);
+                Button delBtn = vl.FindViewById<Button>(Resource.Id.varDelFragBtn);
                 varName.Text = i.name;
                 varValue.Text = i.value.ToString();
                 if (i.type == type.letter)
-                    str.Checked = true;
+                    varType.Text = "문자";
                 else
-                    num.Checked = true;
-                delBtn.Click += delegate { 
+                    varType.Text = "숫자";
+                delBtn.Click += delegate
+                {                    
                     //EVENT who is the the del 
                 };
-                
+
                 //아이디지정된 엘리먼트에 값추가.--- 기억:이건 있던 변수 추가하는것뿐
                 ll.AddView(vl);
-            }
-            Button addValBtn = new Button(ll.Context) { Text="변수추가" };
+            } 
+            #endregion
+            Button addValBtn = layout.FindViewById<Button>(Resource.Id.varAddbtn);
             addValBtn.Click += delegate {
                 variable nv = new variable();
-                var vl = LayoutInflater.Inflate(Resource.Layout.defVarPart, null);
-                LinearLayout vll = vl.FindViewById<LinearLayout>(Resource.Id.dvRoot);
-                vll.Id = View.GenerateViewId();
-                nv.id = vll.Id;
-                EditText varName = vll.FindViewById<EditText>(Resource.Id.varName);              
-                EditText varValue = vll.FindViewById<EditText>(Resource.Id.varValue);
-                RadioButton str = vll.FindViewById<RadioButton>(Resource.Id.StrRadio);
-                RadioButton num = vll.FindViewById<RadioButton>(Resource.Id.NumRadio);
-                Button delBtn = vll.FindViewById<Button>(Resource.Id.vardelbtn);
-                varName.Hint = "변수명";
-                varValue.Hint = "변수값"; 
-                delBtn.Click += delegate {
-                    //EVENT who is the the del 
-                };
-                ll.AddView(vl);
+                var dVP = LayoutInflater.Inflate(Resource.Layout.defVarPart, null);
+
+                AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+                dlg.SetView(dVP);
+                //변수 변경점 적용 기능
+                dlg.SetPositiveButton(Android.Resource.String.Ok, (sender, e) => {
+                    EditText newvarname = dVP.FindViewById<EditText>(Resource.Id.varName);
+                    EditText newvarvalue = dVP.FindViewById<EditText>(Resource.Id.varValue);
+                    RadioButton nstr = dVP.FindViewById<RadioButton>(Resource.Id.StrRadio);
+                    RadioButton nnum = dVP.FindViewById<RadioButton>(Resource.Id.NumRadio);
+                    //TODO: 빈칸 검증
+                    //layout(ll)에 추가할 것
+                    var dVF = LayoutInflater.Inflate(Resource.Layout.defVarFrag, null);
+                    dVF.Id = nv.id = View.GenerateViewId();
+                    TextView vvarName = dVF.FindViewById<TextView>(Resource.Id.varNameFrag);
+                    TextView vvarValue = dVF.FindViewById<TextView>(Resource.Id.varValueFrag);
+                    TextView vvarType = dVF.FindViewById<TextView>(Resource.Id.varTypeFrag);
+                    Button vdelBtn = dVF.FindViewById<Button>(Resource.Id.varDelFragBtn);
+                    vvarName.Text = nv.name = newvarname.Text;
+                    vvarValue.Text = (string)(nv.value = newvarvalue.Text);
+                    if (nstr.Checked == true)
+                    {
+                        vvarType.Text = "문자";
+                        nv.type = type.letter;
+                    }
+                    else
+                    {
+                        vvarType.Text = "숫자";
+                        nv.type = type.number;
+                    }
+                    vdelBtn.Click += delegate {
+                        //EVENT who is the the del 
+                    };
+                    ll.AddView(dVF);
+                    newVal.Add(nv);
+                });
+
+                AlertDialog dlgr = dlg.Create();
+                dlgr.Show();
             };
-            ll.AddView(addValBtn);  
+  
             dialog.SetView(layout);
             dialog.SetPositiveButton(Android.Resource.String.Ok, (sender, e) => {
                 List<variable> oldvariable = varList;
@@ -231,11 +260,12 @@ namespace BNC0D3
                 }
                 foreach(variable nv in newVal)
                 {
-                    variable sv = new variable();
-                    sv.name = ll.FindViewById<LinearLayout>(nv.id).FindViewById<EditText>(Resource.Id.varName).Text;
-                    sv.value = ll.FindViewById<LinearLayout>(nv.id).FindViewById<EditText>(Resource.Id.varValue).Text;
-                    sv.type = ll.FindViewById<LinearLayout>(nv.id).FindViewById<RadioButton>(Resource.Id.StrRadio).Checked ? type.letter : type.number;
-                    sv.id = nv.id;
+                    variable sv = nv;
+                    //ToDo:error fix
+                    //sv.name = ll.FindViewById<LinearLayout>(nv.id).FindViewById<EditText>(Resource.Id.varName).Text;
+                    //sv.value = ll.FindViewById<LinearLayout>(nv.id).FindViewById<EditText>(Resource.Id.varValue).Text;
+                    //sv.type = ll.FindViewById<LinearLayout>(nv.id).FindViewById<RadioButton>(Resource.Id.StrRadio).Checked ? type.letter : type.number;
+                    //sv.id = nv.id;
                     bool isExist = false;
                     varList.ForEach((variable v) => {
                         if (v.name == sv.name)
@@ -249,7 +279,7 @@ namespace BNC0D3
                     {
                         // Toast 문제있소!
                     }
-                }                
+                }
             });
             #region temp
             //EditText varValue = (EditText)layout.FindViewById(Resource.Id.varValue),
@@ -359,6 +389,7 @@ namespace BNC0D3
             //완료 이벤트 개발 우선순위 1 변수초기화후 새로 다시추가 2 사용된 변수인지 체크
             dialogger = dialog.Create();
             dialogger.Show();
+            
         }
 
         private void Slider_DrawerOpen(object sender, EventArgs e)
@@ -372,15 +403,21 @@ namespace BNC0D3
             }
             else
             {
-
                 XmlDocument code = new XmlDocument();
-                XmlElement cd = code.CreateElement("code");                
+                XmlElement cd = code.CreateElement("code");
+                List<FlowPart> varCode = new List<FlowPart>();
+                foreach (variable i in varList)
+                {
+                    varCode.Add(new definePart(i.type == type.letter ? DefType.String : DefType.Number, i.name, i.value.ToString()));
+                }
+                varCode.AddRange(codeBlock);
+                codeBlock = varCode;
                 foreach (FlowPart i in codeBlock)
                 {
                     cd.AppendChild(i.XmlDigest(code));
                 }
                 code.AppendChild(cd);
-                vm = new BMachine(code.OuterXml, (string o) => { m_Adapter.Add(o); });
+                vm = new BMachine(code.OuterXml, (string o) => { RunOnUiThread(delegate { m_Adapter.Add(o); }); });
                 vm.Run();
                 /*
                 Vaquita4android.Parser parser = new Vaquita4android.Parser();

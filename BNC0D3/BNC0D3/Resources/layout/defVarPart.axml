@@ -24,15 +24,16 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:id="@+id/varName"
-        android:layout_weight="1" />
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_weight="1"
+        android:hint="변수 이름" />
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:id="@+id/varValue"
-        android:layout_weight="1" />
-    <Button
-        android:text="X"
-        android:layout_width="50dip"
-        android:layout_height="match_parent"
-        android:id="@+id/vardelbtn" />
+        android:layout_weight="1"
+        android:hint="변수 값" />
 </LinearLayout>
