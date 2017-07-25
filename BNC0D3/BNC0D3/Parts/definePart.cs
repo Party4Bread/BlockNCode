@@ -9,6 +9,8 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace BNC0D3.Parts
 {
@@ -51,8 +53,6 @@ namespace BNC0D3.Parts
                 }
             }
         }
-        
-
         public override XmlElement XmlDigest(XmlDocument doc)
         {
             XmlElement defElement = doc.CreateElement("def");
