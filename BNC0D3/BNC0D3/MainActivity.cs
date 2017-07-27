@@ -15,6 +15,7 @@ using Plugin.FilePicker.Abstractions;
 using System.Text;
 using BreadMachine.Android;
 using Android.Views.InputMethods;
+using DynamicExpresso;
 
 namespace BNC0D3
 {
@@ -172,7 +173,7 @@ namespace BNC0D3
                 vl.Id = i.id;
                 TextView varName = vl.FindViewById<TextView>(Resource.Id.varNameFrag);
                 TextView varValue = vl.FindViewById<TextView>(Resource.Id.varValueFrag);
-                TextView varType = vl.FindViewById<TextView>(Resource.Id.varValueFrag);
+                TextView varType = vl.FindViewById<TextView>(Resource.Id.varTypeFrag);
                 Button delBtn = vl.FindViewById<Button>(Resource.Id.varDelFragBtn);
                 varName.Text = i.name;
                 varValue.Text = i.value.ToString();
@@ -181,11 +182,13 @@ namespace BNC0D3
                 else
                     varType.Text = "숫자";
                 delBtn.Click += delegate
-                {                    
+                {
+                    
                     //EVENT who is the the del 
                 };
 
                 //아이디지정된 엘리먼트에 값추가.--- 기억:이건 있던 변수 추가하는것뿐
+
                 ll.AddView(vl);
             } 
             #endregion
@@ -240,10 +243,10 @@ namespace BNC0D3
                 foreach(variable ov in oldvariable)
                 {
                     variable sv = new variable();
-                    sv.name = ll.FindViewById<LinearLayout>(ov.id).FindViewById<EditText>(Resource.Id.varName).Text;
-                    sv.value = ll.FindViewById<LinearLayout>(ov.id).FindViewById<EditText>(Resource.Id.varValue).Text;
+                    sv.name = ll.FindViewById<LinearLayout>(ov.id).FindViewById<EditText>(Resource.Id.varNameFrag).Text;
+                    sv.value = ll.FindViewById<LinearLayout>(ov.id).FindViewById<EditText>(Resource.Id.varValueFrag).Text;
                     sv.type = ll.FindViewById<LinearLayout>(ov.id).FindViewById<RadioButton>(Resource.Id.StrRadio).Checked ? type.letter : type.number;
-                    sv.id = ov.id;
+                    sv.id  = ov.id;
                     bool isExist = false;
                     varList.ForEach((variable v) => {
                         if (v.name == sv.name)
@@ -601,6 +604,8 @@ namespace BNC0D3
         #region CHECK_FUNCTION
         bool checkFormular(List<variable> vars, string s)
         {
+            #region unused code
+            /*
             string st = s;
             List<string> var = new List<string>();
             List<String> v = new List<String>();
@@ -700,6 +705,7 @@ namespace BNC0D3
                 {
                     throw new Exception("명시되지 않은 변수: '" + t + "'(을)를 사용했습니다.");
                 }
+
             }
             if (f.Count != 0)
             {
@@ -767,6 +773,22 @@ namespace BNC0D3
                 {
                     throw new Exception("명시되지 않은 연산자: '" + t + "'(을)를 사용했습니다.");
                 }
+            }
+            return true;
+            */
+#endregion
+            Interpreter i = new Interpreter();
+            foreach(variable ji in vars)
+            {
+                i.SetVariable(ji.name, ji.value, ji.type == type.letter ? Type.GetType("string") : Type.GetType("double"));
+            }
+            try
+            {
+                i.Eval(s);
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
             return true;
         }

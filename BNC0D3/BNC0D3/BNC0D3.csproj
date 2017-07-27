@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Launcher.cs" />
+    <Compile Include="LoopActivity.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Parts\calculationPart.cs" />
     <Compile Include="Parts\codePart.cs" />
@@ -116,6 +117,9 @@
     <AndroidResource Include="Resources\layout\defVarFrag.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\loopSetting.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml">
@@ -138,6 +142,10 @@
     <ProjectReference Include="..\BreadMachine\BreadMachine.csproj">
       <Project>{CCA8E44D-8D50-44F8-ABB8-D712956372CD}</Project>
       <Name>BreadMachine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DynamicExpresso.Android\DynamicExpresso.Android.csproj">
+      <Project>{49B22EAA-C64A-4D74-BBA9-8E955123DDAE}</Project>
+      <Name>DynamicExpresso.Android</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
