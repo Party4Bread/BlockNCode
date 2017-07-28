@@ -89,7 +89,7 @@ namespace BNC0D3
             Intent intent = new Intent();
             XmlDocument doc = new XmlDocument();
             doc.AppendChild(codeBlock.XmlDigest(doc));
-            intent.PutExtra("key",doc.OuterXml);
+            intent.PutExtra("code",doc.OuterXml);
             SetResult(Result.Ok, intent);
             Finish();
         }

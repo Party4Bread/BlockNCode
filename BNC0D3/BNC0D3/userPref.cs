@@ -12,6 +12,8 @@ using Android.Widget;
 using Android.Preferences;
 using BreadMachine.Android;
 using System.Threading.Tasks;
+using BNC0D3.Parts;
+using System.Xml;
 
 namespace BNC0D3
 {
@@ -55,6 +57,12 @@ namespace BNC0D3
             while (!bm.Input("5")) {
                 bm.Input("5");
             }
+            codePart cp = new codePart();
+            cp.Add(new definePart(DefType.Number, "nigg", "2"));
+            XmlDocument doc = new XmlDocument();
+            doc.AppendChild(cp.XmlDigest(doc));
+            tv2.Text += doc.OuterXml + System.Environment.NewLine;
+
             //while (!bm.Input("5")) { }
             //while (!bm.Input("5")) { }
             //while (!bm.Input("5")) { }

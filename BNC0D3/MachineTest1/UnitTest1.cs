@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DynamicExpresso;
 using BreadMachine.Android;
-
+using BNC0D3.Parts;
 namespace MachineTest1
 {
     [TestClass]
@@ -62,6 +62,14 @@ namespace MachineTest1
             bm.Step();
             bm.Step();
             Assert.AreEqual("35", ans);
+        }
+
+        [TestMethod]
+        public void MyTestMethod()
+        {/*
+            codePart cp = new codePart();
+            cp.Add(new definePart(DefType.Number, "vartest", "22"));
+            Assert.AreEqual(cp.XmlDigest(doc));*/
         }
     }
 }

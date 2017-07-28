@@ -13,9 +13,14 @@ using Android.Widget;
 
 namespace BNC0D3.Parts
 {
-    class codePart : FlowPart ,IList<FlowPart>
+    public class codePart : FlowPart ,IList<FlowPart>
     {
         public List<FlowPart> code;
+
+        public codePart()
+        {
+            code = new List<FlowPart>();
+        }
 
         public FlowPart this[int index] { get => ((IList<FlowPart>)code)[index]; set => ((IList<FlowPart>)code)[index] = value; }
 

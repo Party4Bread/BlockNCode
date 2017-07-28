@@ -57,6 +57,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BNC0D3\BNC0D3.csproj">
+      <Project>{a8f1b4fa-027b-40b0-8bb1-0dbbf7e5bf17}</Project>
+      <Name>BNC0D3</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BreadMachine\BreadMachine.csproj">
       <Project>{cca8e44d-8d50-44f8-abb8-d712956372cd}</Project>
       <Name>BreadMachine</Name>
