@@ -21,6 +21,16 @@ namespace BNC0D3.Parts
         public string defValue;
         public bool inputAble;
         public DefType defType;
+
+        public definePart(string Xml)
+        {
+            XmlDocument a = new XmlDocument();
+            a.LoadXml(Xml);
+            defType = a.Attributes["type"].Value == "0" ? DefType.Number : DefType.String;
+            defValue=a.Attributes["value"].Value;
+            defName = a.InnerText;
+        }
+
         public definePart(DefType defType,string defName,string defValue,bool inputAble=false)
         {
             this.defName = defName;

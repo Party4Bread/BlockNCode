@@ -47,6 +47,16 @@
                     android:background="#FF4848"
                     android:textColor="#FFFFFF" />
                 <Button
+                    android:text="반복"
+                    android:textSize="25dip"
+                    android:layout_width="70dip"
+                    android:layout_height="70dip"
+                    android:minWidth="70dip"
+                    android:id="@+id/loop_button"
+                    android:layout_margin="5dip"
+                    android:background="#CC8314"
+                    android:textColor="#FFFFFF" />
+                <Button
                     android:text="저장"
                     android:textSize="25dip"
                     android:layout_width="70dip"

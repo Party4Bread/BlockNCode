@@ -22,6 +22,29 @@ namespace BNC0D3.Parts
             code = new List<FlowPart>();
         }
 
+        public codePart(string xml)
+        {
+            XmlDocument a = new XmlDocument();
+            a.LoadXml(xml);
+            foreach (XmlNode i in a.ChildNodes)
+            {
+                switch (i.Name)
+                {
+                    case "def":
+                        code.Add(new definePart(i.OuterXml));
+                        break;
+                    case "calc":
+                        break;
+                    case "loop":
+                        break;
+                    case "break":
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
         public FlowPart this[int index] { get => ((IList<FlowPart>)code)[index]; set => ((IList<FlowPart>)code)[index] = value; }
 
         public int Count => ((IList<FlowPart>)code).Count;

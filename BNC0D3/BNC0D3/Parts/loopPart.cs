@@ -15,7 +15,24 @@ namespace BNC0D3.Parts
     class loopPart : FlowPart
     {
         public codePart codeinloop;
+        public string condition;
 
+        public loopPart(codePart codeinloop, string condition)
+        {
+            this.codeinloop = codeinloop;
+            this.condition = condition;
+        }
+        public loopPart(string xml)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
+            if(doc.Name!="loop")
+            {
+                throw new Exception("XML이 형식에 맞지 않습니다.");
+            }
+            condition=doc.Attributes["condition"].Value;
+            codeinloop = new codePart(doc.InnerXml);
+        }
         public override string Digest()
         {
             return "while(1){"+codeinloop.Digest()+"}";
@@ -24,6 +41,9 @@ namespace BNC0D3.Parts
         public override XmlElement XmlDigest(XmlDocument doc)
         {
             XmlElement loopElement = doc.CreateElement("loop");
+            XmlAttribute conditionAtt = doc.CreateAttribute("condition");
+            conditionAtt.Value = condition;
+            loopElement.Attributes.Append(conditionAtt);
             loopElement.AppendChild(codeinloop.XmlDigest(doc));
             return loopElement;
         }

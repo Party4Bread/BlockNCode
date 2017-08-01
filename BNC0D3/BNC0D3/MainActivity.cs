@@ -16,6 +16,7 @@ using System.Text;
 using BreadMachine.Android;
 using Android.Views.InputMethods;
 using DynamicExpresso;
+using Android.Runtime;
 
 namespace BNC0D3
 {
@@ -27,6 +28,7 @@ namespace BNC0D3
         public object value;
         public type type;
     }
+    public enum Activitycode { main,loop,condition };
     [Activity(ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait,Label = "BNC0D3", WindowSoftInputMode = Android.Views.SoftInput.AdjustPan |SoftInput.StateAlwaysHidden, Theme = "@android:style/Theme.NoTitleBar")]
     public class MainActivity : Activity
     {
@@ -34,11 +36,7 @@ namespace BNC0D3
         private ArrayAdapter<string> m_Adapter;
         private EditText conIpt;
         private ListView conOpt;
-        private Button consumit;
-        private Button defbtn;
-        private Button calcbtn;
-        private Button optbtn;
-        private Button savebtn;
+        private Button consumit,defbtn,calcbtn,loopbtn,optbtn,savebtn;        
         bool codeShow;
         private SlidingDrawer slider;
         List<FlowPart> codeBlock;
@@ -58,16 +56,17 @@ namespace BNC0D3
             SetContentView(Resource.Layout.Main);
             #region SET_VAR_VALUE
             codeShow = Application.Context.GetSharedPreferences("BNCODE", FileCreationMode.Private).GetBoolean("codeShow", false);
-            conOpt = (ListView)FindViewById(Resource.Id.consoleOpt);
-            conIpt = (EditText)FindViewById(Resource.Id.consoleIpt);
+            conOpt = FindViewById<ListView>(Resource.Id.consoleOpt);
+            conIpt = FindViewById<EditText>(Resource.Id.consoleIpt);
             consumit = FindViewById<Button>(Resource.Id.consoleSummit);
             defbtn = FindViewById<Button>(Resource.Id.def_button);
             calcbtn = FindViewById<Button>(Resource.Id.calc_button);
             optbtn = FindViewById<Button>(Resource.Id.opt_button);
             loadbtn = FindViewById<Button>(Resource.Id.load_button);
-            gridflow = (GridLayout)FindViewById(Resource.Id.gridView1);
-            slider = (SlidingDrawer)FindViewById(Resource.Id.slidingDrawer1);
+            gridflow = FindViewById<GridLayout>(Resource.Id.gridView1);
+            slider = FindViewById<SlidingDrawer>(Resource.Id.slidingDrawer1);
             savebtn = FindViewById<Button>(Resource.Id.save_button);
+            loopbtn = FindViewById<Button>(Resource.Id.load_button);
             DisplayMetrics displayMetrics = new DisplayMetrics();
             dialog = new AlertDialog.Builder(this);
             WindowManager.DefaultDisplay.GetMetrics(displayMetrics);
@@ -92,6 +91,7 @@ namespace BNC0D3
             optbtn.Click += Optbtn_Click;
             savebtn.Click += Savebtn_Click;
             loadbtn.Click += Loadbtn_ClickAsync;
+            loopbtn.Click += Loopbtn_Click;
             #endregion
             /*
             LinearLayout ll = (LinearLayout)la.RootView;
@@ -105,7 +105,77 @@ namespace BNC0D3
             ll.AddView(delb);*/
         }
 
+        protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
+        {
+            base.OnActivityResult(requestCode, resultCode, data);
+            switch ((Activitycode)requestCode)
+            {
+                case Activitycode.loop:
+                    string loopcode = data.GetStringExtra("code");
+                    //checkFormular(varList, formularTb.Text);
+                    FlowPart fp = new loopPart();
+                    
+                    //fp.compoId = View.GenerateViewId();
+                    //fp.index = codeBlock.Count;
+                    codeBlock.Add(fp);
 
+                    Button calcflow = new Button(this)
+                    {
+                        Text = "연산",
+                        Tag = codeBlock.Count - 1,
+                        Id = fp.compoId
+                    };
+                    calcflow.SetTextColor(Color.Rgb(0, 0, 0));
+                    calcflow.SetBackgroundColor(Color.Rgb(137, 46, 228));
+                    calcflow.SetMinHeight(width / 5);
+                    calcflow.SetMinWidth(width / 5);
+                    calcflow.SetTextSize(ComplexUnitType.Dip, 25);
+                    calcflow.Click += (sednder, Dialo) =>
+                    {
+                        int index = Convert.ToInt32(((Button)sednder).Tag.ToString());
+                        View la = LayoutInflater.Inflate(Resource.Layout.calcSetting, null);
+                        TextView mN = (TextView)la.FindViewById(Resource.Id.MenuName);
+                        mN.Text = "계산식";
+                        LinearLayout ll = (LinearLayout)la.RootView;
+                        Button delb = new Button(this) { Text = "삭제" };
+                        delb.SetBackgroundColor(Color.Rgb(255, 0, 0));
+                        delb.SetTextColor(Color.Rgb(0, 0, 0));
+                        delb.Click += delegate
+                        {
+                            codeBlock.RemoveAt(index);
+                            gridflow.RemoveViewAt(index);
+                            dialogger.Cancel();
+                        };
+                        ll.AddView(delb);
+                        dialog.SetView(la);
+                        EditText formTb = (EditText)la.FindViewById(Resource.Id.formular);
+                        formTb.Text = ((calculationPart)(codeBlock[index])).formula;
+                        dialog.SetPositiveButton(Android.Resource.String.Ok, delegate
+                        {
+                            try
+                            {
+                                string form = formTb.Text;
+                                checkFormular(varList, formularTb.Text);
+                                codeBlock[index] = new calculationPart(formula);
+                            }
+                            catch (Exception ee)
+                            {
+                                Toast.MakeText(this, ee.Message, ToastLength.Long).Show();
+                            }
+                        });
+                        dialogger = dialog.Create();
+                        dialogger.Show();
+                    };
+                    gridflow.AddView(calcflow);
+                    break;
+            }
+        }
+
+        private void Loopbtn_Click(object sender, EventArgs e)
+        {
+            Intent i = new Intent(this, typeof(LoopActivity));
+            StartActivityForResult(i,(int)Activitycode.loop);
+        }
 
         private async void Loadbtn_ClickAsync(object sender, EventArgs e)
         {
@@ -821,4 +891,5 @@ namespace BNC0D3
         }
         #endregion
     }
+
 }
