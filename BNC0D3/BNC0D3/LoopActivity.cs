@@ -90,6 +90,8 @@ namespace BNC0D3
             XmlDocument doc = new XmlDocument();
             doc.AppendChild(codeBlock.XmlDigest(doc));
             intent.PutExtra("code",doc.OuterXml);
+            //Upper code might be useless.
+            TempStorage.tempFP = codeBlock;
             SetResult(Result.Ok, intent);
             Finish();
         }

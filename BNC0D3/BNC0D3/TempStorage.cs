@@ -13,8 +13,8 @@ using BNC0D3.Parts;
 
 namespace BNC0D3
 {
-    static class TempStorage
+    public static class TempStorage
     {
-        static FlowPart tempFP = null;
+        public static FlowPart tempFP = null;
     }
 }
