@@ -1,5 +1,4 @@
 ﻿using Android.App;
-using Android.App;
 using Android.Widget;
 using Android.OS;
 using System.Collections.Generic;
@@ -21,7 +20,7 @@ using DynamicExpresso;
 namespace BNC0D3
 {
     [Activity(ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait, Label = "BNC0D3", WindowSoftInputMode = Android.Views.SoftInput.AdjustPan | SoftInput.StateAlwaysHidden, Theme = "@android:style/Theme.NoTitleBar")]
-    public class LoopActivity : Activity
+    public class ConStActivity : Activity
     {
         #region CREATE_VAR
         private ArrayAdapter<string> m_Adapter;
@@ -46,7 +45,7 @@ namespace BNC0D3
         {
             base.OnCreate(bundle);
             // Set our view from the "main" layout resource
-            SetContentView(Resource.Layout.loopSetting);
+            SetContentView(Resource.Layout.conStSetting);
             #region SET_VAR_VALUE
             codeShow = Application.Context.GetSharedPreferences("BNCODE", FileCreationMode.Private).GetBoolean("codeShow", false);
             conbtn = FindViewById<Button>(Resource.Id.con_button);

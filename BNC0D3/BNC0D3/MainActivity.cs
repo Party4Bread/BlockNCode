@@ -28,7 +28,7 @@ namespace BNC0D3
         public object value;
         public type type;
     }
-    public enum Activitycode { main,loop,condition };
+    public enum Activitycode { main,loop,loopfix,condition,conditionfix};
     [Activity(ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait,Label = "BNC0D3", WindowSoftInputMode = Android.Views.SoftInput.AdjustPan |SoftInput.StateAlwaysHidden, Theme = "@android:style/Theme.NoTitleBar")]
     public class MainActivity : Activity
     {
@@ -66,7 +66,7 @@ namespace BNC0D3
             gridflow = FindViewById<GridLayout>(Resource.Id.gridView1);
             slider = FindViewById<SlidingDrawer>(Resource.Id.slidingDrawer1);
             savebtn = FindViewById<Button>(Resource.Id.save_button);
-            loopbtn = FindViewById<Button>(Resource.Id.load_button);
+            loopbtn = FindViewById<Button>(Resource.Id.loop_button);
             DisplayMetrics displayMetrics = new DisplayMetrics();
             dialog = new AlertDialog.Builder(this);
             WindowManager.DefaultDisplay.GetMetrics(displayMetrics);
@@ -111,62 +111,35 @@ namespace BNC0D3
             switch ((Activitycode)requestCode)
             {
                 case Activitycode.loop:
-                    string loopcode = data.GetStringExtra("code");
-                    //checkFormular(varList, formularTb.Text);
-                    FlowPart fp = new loopPart();
+                    if (TempStorage.tempFP == null)
+                    {
+                        return;
+                    }
+
+                    FlowPart fp = TempStorage.tempFP;
                     
-                    //fp.compoId = View.GenerateViewId();
-                    //fp.index = codeBlock.Count;
+                    fp.compoId = View.GenerateViewId();
+                    fp.index = codeBlock.Count;
                     codeBlock.Add(fp);
 
-                    Button calcflow = new Button(this)
+                    Button loopflow = new Button(this)
                     {
-                        Text = "연산",
+                        Text = "반복",
                         Tag = codeBlock.Count - 1,
                         Id = fp.compoId
                     };
-                    calcflow.SetTextColor(Color.Rgb(0, 0, 0));
-                    calcflow.SetBackgroundColor(Color.Rgb(137, 46, 228));
-                    calcflow.SetMinHeight(width / 5);
-                    calcflow.SetMinWidth(width / 5);
-                    calcflow.SetTextSize(ComplexUnitType.Dip, 25);
-                    calcflow.Click += (sednder, Dialo) =>
+                    loopflow.SetTextColor(Color.Rgb(0, 0, 0));
+                    loopflow.SetBackgroundColor(Color.Rgb(204, 131, 20));
+                    loopflow.SetMinHeight(width / 5);
+                    loopflow.SetMinWidth(width / 5);
+                    loopflow.SetTextSize(ComplexUnitType.Dip, 25);
+                    loopflow.Click += (sednder, Dialo) =>
                     {
-                        int index = Convert.ToInt32(((Button)sednder).Tag.ToString());
-                        View la = LayoutInflater.Inflate(Resource.Layout.calcSetting, null);
-                        TextView mN = (TextView)la.FindViewById(Resource.Id.MenuName);
-                        mN.Text = "계산식";
-                        LinearLayout ll = (LinearLayout)la.RootView;
-                        Button delb = new Button(this) { Text = "삭제" };
-                        delb.SetBackgroundColor(Color.Rgb(255, 0, 0));
-                        delb.SetTextColor(Color.Rgb(0, 0, 0));
-                        delb.Click += delegate
-                        {
-                            codeBlock.RemoveAt(index);
-                            gridflow.RemoveViewAt(index);
-                            dialogger.Cancel();
-                        };
-                        ll.AddView(delb);
-                        dialog.SetView(la);
-                        EditText formTb = (EditText)la.FindViewById(Resource.Id.formular);
-                        formTb.Text = ((calculationPart)(codeBlock[index])).formula;
-                        dialog.SetPositiveButton(Android.Resource.String.Ok, delegate
-                        {
-                            try
-                            {
-                                string form = formTb.Text;
-                                checkFormular(varList, formularTb.Text);
-                                codeBlock[index] = new calculationPart(formula);
-                            }
-                            catch (Exception ee)
-                            {
-                                Toast.MakeText(this, ee.Message, ToastLength.Long).Show();
-                            }
-                        });
-                        dialogger = dialog.Create();
-                        dialogger.Show();
+                        Intent i = new Intent(this, typeof(LoopActivity));
+                        StartActivityForResult(i, (int)Activitycode.loopfix);
+                        //loopfixactivity need vvcccc
                     };
-                    gridflow.AddView(calcflow);
+                    gridflow.AddView(loopflow);
                     break;
             }
         }
@@ -174,6 +147,7 @@ namespace BNC0D3
         private void Loopbtn_Click(object sender, EventArgs e)
         {
             Intent i = new Intent(this, typeof(LoopActivity));
+            TempStorage.tempOBJ = varList;
             StartActivityForResult(i,(int)Activitycode.loop);
         }
 
@@ -313,9 +287,9 @@ namespace BNC0D3
                 foreach(variable ov in oldvariable)
                 {
                     variable sv = new variable();
-                    sv.name = ll.FindViewById<LinearLayout>(ov.id).FindViewById<EditText>(Resource.Id.varNameFrag).Text;
-                    sv.value = ll.FindViewById<LinearLayout>(ov.id).FindViewById<EditText>(Resource.Id.varValueFrag).Text;
-                    sv.type = ll.FindViewById<LinearLayout>(ov.id).FindViewById<RadioButton>(Resource.Id.StrRadio).Checked ? type.letter : type.number;
+                    sv.name = ll.FindViewById<LinearLayout>(ov.id).FindViewById<TextView>(Resource.Id.varNameFrag).Text;
+                    sv.value = ll.FindViewById<LinearLayout>(ov.id).FindViewById<TextView>(Resource.Id.varValueFrag).Text;
+                    sv.type = ll.FindViewById<LinearLayout>(ov.id).FindViewById<TextView>(Resource.Id.varTypeFrag).Text=="숫자" ? type.number : type.letter;
                     sv.id  = ov.id;
                     bool isExist = false;
                     varList.ForEach((variable v) => {
@@ -847,6 +821,7 @@ namespace BNC0D3
             return true;
             */
 #endregion
+            /*
             Interpreter i = new Interpreter();
             foreach(variable ji in vars)
             {
@@ -859,7 +834,7 @@ namespace BNC0D3
             catch (Exception e)
             {
                 throw e;
-            }
+            }*/
             return true;
         }
         bool checkVar(DefType t, string name, ref string value)

@@ -30,7 +30,7 @@ namespace BNC0D3.Parts
             {
                 throw new Exception("XML이 형식에 맞지 않습니다.");
             }
-            condition=doc.Attributes["condition"].Value;
+            condition=doc.Attributes["con"].Value;
             codeinloop = new codePart(doc.InnerXml);
         }
         public override string Digest()
@@ -41,7 +41,7 @@ namespace BNC0D3.Parts
         public override XmlElement XmlDigest(XmlDocument doc)
         {
             XmlElement loopElement = doc.CreateElement("loop");
-            XmlAttribute conditionAtt = doc.CreateAttribute("condition");
+            XmlAttribute conditionAtt = doc.CreateAttribute("con");
             conditionAtt.Value = condition;
             loopElement.Attributes.Append(conditionAtt);
             loopElement.AppendChild(codeinloop.XmlDigest(doc));

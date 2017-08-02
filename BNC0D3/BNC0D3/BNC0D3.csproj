@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Launcher.cs" />
+    <Compile Include="ConStActivity.cs" />
     <Compile Include="LoopActivity.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Parts\calculationPart.cs" />
@@ -119,6 +120,9 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\loopSetting.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\conStSetting.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
