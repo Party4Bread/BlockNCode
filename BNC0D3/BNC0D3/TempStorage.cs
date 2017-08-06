@@ -15,7 +15,7 @@ namespace BNC0D3
 {
     public static class TempStorage
     {
-        public static FlowPart tempFP = null;
+        public static FlowPart tempFP = null, tempFP2=null;
         public static string tempSTR = null;
         public static int tempINT = 0;
         public static object tempOBJ = null;

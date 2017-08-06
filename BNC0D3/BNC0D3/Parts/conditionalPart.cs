@@ -18,6 +18,16 @@ namespace BNC0D3.Parts
         public bool elsestate = false;
         public codePart truePart;
         public codePart falsePart;
+        public conditionalPart(codePart truePart, string condition,codePart falsePart=null)
+        {
+            this.truePart = truePart;
+            if(falsePart!=null)
+            {
+                this.falsePart = falsePart;
+                elsestate = true;
+            }
+            this.condition = condition;
+        }
         public override string Digest()
         {
             if (!elsestate)

@@ -24,21 +24,17 @@ namespace BNC0D3
     public class LoopActivity : Activity
     {
         #region CREATE_VAR
-        private ArrayAdapter<string> m_Adapter;
         private Button conbtn;
         private Button calcbtn;
         private Button optbtn;
         private Button exitbtn;
         bool codeShow;
-        private SlidingDrawer slider;
         codePart codeBlock;
         int width;
         AlertDialog.Builder dialog;
         AlertDialog dialogger;
         public GridLayout gridflow { get; private set; }
         List<variable> varList;
-        private Button loadbtn;
-        private BMachine vm;
         InputMethodManager mgr;
         string condition;
         #endregion
@@ -52,9 +48,7 @@ namespace BNC0D3
             conbtn = FindViewById<Button>(Resource.Id.con_button);
             calcbtn = FindViewById<Button>(Resource.Id.calc_button);
             optbtn = FindViewById<Button>(Resource.Id.opt_button);
-            loadbtn = FindViewById<Button>(Resource.Id.load_button);
             gridflow = (GridLayout)FindViewById(Resource.Id.gridView1);
-            slider = (SlidingDrawer)FindViewById(Resource.Id.slidingDrawer1);
             exitbtn = FindViewById<Button>(Resource.Id.exitbtn);
             DisplayMetrics displayMetrics = new DisplayMetrics();
             dialog = new AlertDialog.Builder(this);
@@ -62,7 +56,6 @@ namespace BNC0D3
             width = displayMetrics.WidthPixels;
             mgr = (InputMethodManager)GetSystemService(InputMethodService);
             //preset
-            m_Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1);
             //value4code
             codeBlock = new codePart();
             varList = TempStorage.tempOBJ as List<variable>;

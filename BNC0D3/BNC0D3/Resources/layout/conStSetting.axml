@@ -1,5 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    android:minWidth="25px"
+    android:minHeight="25px">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minWidth="25px"
+        android:baselineAligned="false"
+        android:minHeight="25px"
+        android:background="#A5FEFA">
+        <HorizontalScrollView
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/horizontalScrollView1"
+            android:background="#62D0FF">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_margin="5dip">
+                <Button
+                    android:text="연산"
+                    android:textSize="25dip"
+                    android:layout_width="70dip"
+                    android:layout_height="70dip"
+                    android:minWidth="70dip"
+                    android:id="@+id/calc_button"
+                    android:layout_margin="5dip"
+                    android:background="#892EE4"
+                    android:textColor="#FFFFFF" />
+                <Button
+                    android:text="출력"
+                    android:textSize="25dip"
+                    android:layout_width="70dip"
+                    android:layout_height="70dip"
+                    android:minWidth="70dip"
+                    android:id="@+id/opt_button"
+                    android:layout_margin="5dip"
+                    android:background="#FF4848"
+                    android:textColor="#FFFFFF" />
+                <Button
+                    android:text="나가기"
+                    android:textSize="25dip"
+                    android:layout_width="75dip"
+                    android:layout_height="70dip"
+                    android:minWidth="70dip"
+                    android:id="@+id/exitbtn"
+                    android:layout_margin="5dip"
+                    android:background="#000000"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
+        </HorizontalScrollView>
+        <ScrollView
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView1">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:minWidth="25px"
+                    android:minHeight="25px"
+                    android:background="#A5FEFA">
+                    <Button
+                        android:text="조건"
+                        android:textSize="25dip"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dip"
+                        android:minWidth="70dip"
+                        android:id="@+id/con_button"
+                        android:background="#800080"
+                        android:textColor="#FFFFFF" />
+                    <GridLayout
+                        android:minWsidth="25px"
+                        android:minHeight="25px"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/gridView1"
+                        android:columnCount="5"
+                        android:rowCount="5" />
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:minWidth="25px"
+                    android:minHeight="25px"
+                    android:background="#A5FEFA">
+                    <Button
+                        android:text="조건"
+                        android:textSize="25dip"
+                        android:layout_width="match_parent"
+                        android:layout_height="70dip"
+                        android:minWidth="70dip"
+                        android:id="@+id/con_button"
+                        android:background="#800080"
+                        android:textColor="#FFFFFF" />
+                    <GridLayout
+                        android:minWidth="25px"
+                        android:minHeight="25px"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/gridView1"
+                        android:columnCount="5"
+                        android:rowCount="5" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</FrameLayout>

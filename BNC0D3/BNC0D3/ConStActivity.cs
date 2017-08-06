@@ -23,23 +23,19 @@ namespace BNC0D3
     public class ConStActivity : Activity
     {
         #region CREATE_VAR
-        private ArrayAdapter<string> m_Adapter;
         private Button conbtn;
         private Button calcbtn;
         private Button optbtn;
         private Button exitbtn;
-        bool codeShow;
-        private SlidingDrawer slider;
-        codePart codeBlock;
+        codePart trueBlock,falseBlock;
         int width;
         AlertDialog.Builder dialog;
         AlertDialog dialogger;
         public GridLayout gridflow { get; private set; }
         List<variable> varList;
-        private Button loadbtn;
-        private BMachine vm;
         InputMethodManager mgr;
         string condition;
+        bool isSelectedBlockTrue = true;
         #endregion
         protected override void OnCreate(Bundle bundle)
         {
@@ -47,13 +43,10 @@ namespace BNC0D3
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.conStSetting);
             #region SET_VAR_VALUE
-            codeShow = Application.Context.GetSharedPreferences("BNCODE", FileCreationMode.Private).GetBoolean("codeShow", false);
             conbtn = FindViewById<Button>(Resource.Id.con_button);
             calcbtn = FindViewById<Button>(Resource.Id.calc_button);
             optbtn = FindViewById<Button>(Resource.Id.opt_button);
-            loadbtn = FindViewById<Button>(Resource.Id.load_button);
             gridflow = (GridLayout)FindViewById(Resource.Id.gridView1);
-            slider = (SlidingDrawer)FindViewById(Resource.Id.slidingDrawer1);
             exitbtn = FindViewById<Button>(Resource.Id.exitbtn);
             DisplayMetrics displayMetrics = new DisplayMetrics();
             dialog = new AlertDialog.Builder(this);
@@ -61,9 +54,9 @@ namespace BNC0D3
             width = displayMetrics.WidthPixels;
             mgr = (InputMethodManager)GetSystemService(InputMethodService);
             //preset
-            m_Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1);
             //value4code
-            codeBlock = new codePart();
+            trueBlock = new codePart();
+            falseBlock = new codePart();
             varList = TempStorage.tempOBJ as List<variable>;
             TempStorage.tempFP = null;
             #endregion
@@ -124,7 +117,7 @@ namespace BNC0D3
             //Upper code might be useless.
             //make checkfunction plz
             
-            TempStorage.tempFP = new loopPart(codeBlock,condition);
+            TempStorage.tempFP = new loopPart(trueBlock,condition);
             SetResult(Result.Ok);
             Finish();
         }
