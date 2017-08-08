@@ -93,7 +93,7 @@ namespace BreadMachine.Android
                     if (curline.Attribute("else").Value == "false")
                     {
                         if (evaler.Eval<bool>(curline.Attribute("con").Value))
-                        {
+                          {
                             subBm = new BMachine(new XDocument(curline.Elements().First()), onPrint);
                             isSub = true;
                             subBm.evaler = this.evaler;

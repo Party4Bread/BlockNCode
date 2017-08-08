@@ -77,7 +77,7 @@ namespace BNC0D3
             TextView menuName = (TextView)layout.FindViewById(Resource.Id.MenuName);
             menuName.Text = "조건식";
             EditText formularTb = (EditText)layout.FindViewById(Resource.Id.formular);
-            formularTb.Text = condition!=null ? condition : "";
+            formularTb.Text = condition ?? "";
             //레이아웃설정
             dialog.SetPositiveButton(Android.Resource.String.Ok, (sendder, ee) =>
             {

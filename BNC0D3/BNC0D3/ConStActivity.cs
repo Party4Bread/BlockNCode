@@ -23,7 +23,7 @@ namespace BNC0D3
     public class ConStActivity : Activity
     {
         #region CREATE_VAR
-        private Button conbtn;
+        private Button conbtn,conokbtn,connotbtn;
         private Button calcbtn;
         private Button optbtn;
         private Button exitbtn;
@@ -31,11 +31,11 @@ namespace BNC0D3
         int width;
         AlertDialog.Builder dialog;
         AlertDialog dialogger;
-        public GridLayout gridflow { get; private set; }
+        public GridLayout trueflow, falseflow;
         List<variable> varList;
         InputMethodManager mgr;
         string condition;
-        bool isSelectedBlockTrue = true;
+        bool isSelectedBlockTrue;
         #endregion
         protected override void OnCreate(Bundle bundle)
         {
@@ -46,7 +46,10 @@ namespace BNC0D3
             conbtn = FindViewById<Button>(Resource.Id.con_button);
             calcbtn = FindViewById<Button>(Resource.Id.calc_button);
             optbtn = FindViewById<Button>(Resource.Id.opt_button);
-            gridflow = (GridLayout)FindViewById(Resource.Id.gridView1);
+            trueflow = (GridLayout)FindViewById(Resource.Id.gridView1);
+            falseflow = FindViewById<GridLayout>(Resource.Id.gridView2);
+            conokbtn = FindViewById<Button>(Resource.Id.conok_button);
+            connotbtn = FindViewById<Button>(Resource.Id.connot_button);
             exitbtn = FindViewById<Button>(Resource.Id.exitbtn);
             DisplayMetrics displayMetrics = new DisplayMetrics();
             dialog = new AlertDialog.Builder(this);
@@ -54,6 +57,7 @@ namespace BNC0D3
             width = displayMetrics.WidthPixels;
             mgr = (InputMethodManager)GetSystemService(InputMethodService);
             //preset
+            isSelectedBlockTrue = true;
             //value4code
             trueBlock = new codePart();
             falseBlock = new codePart();
@@ -63,10 +67,61 @@ namespace BNC0D3
 
             #region COMPONENT_EVENT
             conbtn.Click += Conbtn_Click;
+            connotbtn.Click += Connotbtn_Click;
+            conokbtn.Click += Conokbtn_Click;
             calcbtn.Click += Calcbtn_Click;
             optbtn.Click += Optbtn_Click;
             exitbtn.Click += Exitbtn_Click;
             #endregion
+        }
+
+
+
+        private void Exitbtn_Click(object sender, EventArgs e)
+        {
+            handleClose();
+        }
+
+        public override void OnBackPressed()
+        {
+            handleClose();
+        }
+
+        void handleClose()
+        {
+            //Intent intent = new Intent();
+            //XmlDocument doc = new XmlDocument();
+            //doc.AppendChild(GetCurrentBlock().XmlDigest(doc));
+            //intent.PutExtra("code",doc.OuterXml);
+            
+            //Upper code might be useless.
+            //make checkfunction plz
+            
+            TempStorage.tempFP = new loopPart(trueBlock,condition);
+            SetResult(Result.Ok);
+            Finish();
+        }
+        GridLayout GetCurrentGrid()
+        {
+            return isSelectedBlockTrue ? trueflow : falseflow;
+        }
+        codePart GetCurrentBlock()
+        {
+            return isSelectedBlockTrue ? trueBlock : falseBlock;
+        }
+        #region component_Function
+        private void Conokbtn_Click(object sender, EventArgs e)
+        {
+            isSelectedBlockTrue = true;
+            conokbtn.SetBackgroundColor(Color.Rgb(0xee, 0, 0xee));
+            connotbtn.SetBackgroundColor(Color.Rgb(0xcc, 0, 0xcc));
+        }
+
+        private void Connotbtn_Click(object sender, EventArgs e)
+        {
+            isSelectedBlockTrue = false;
+            conokbtn.SetBackgroundColor(Color.Rgb(0xcc, 0, 0xcc));
+            connotbtn.SetBackgroundColor(Color.Rgb(0xee, 0, 0xee));
         }
 
         private void Conbtn_Click(object sender, EventArgs e)
@@ -76,7 +131,7 @@ namespace BNC0D3
             TextView menuName = (TextView)layout.FindViewById(Resource.Id.MenuName);
             menuName.Text = "조건식";
             EditText formularTb = (EditText)layout.FindViewById(Resource.Id.formular);
-            formularTb.Text = condition!=null ? condition : "";
+            formularTb.Text = condition ?? "";
             //레이아웃설정
             dialog.SetPositiveButton(Android.Resource.String.Ok, (sendder, ee) =>
             {
@@ -97,32 +152,6 @@ namespace BNC0D3
             dialogger.Show();
         }
 
-        private void Exitbtn_Click(object sender, EventArgs e)
-        {
-            handleClose();
-        }
-
-        public override void OnBackPressed()
-        {
-            handleClose();
-        }
-
-        void handleClose()
-        {
-            //Intent intent = new Intent();
-            //XmlDocument doc = new XmlDocument();
-            //doc.AppendChild(codeBlock.XmlDigest(doc));
-            //intent.PutExtra("code",doc.OuterXml);
-            
-            //Upper code might be useless.
-            //make checkfunction plz
-            
-            TempStorage.tempFP = new loopPart(trueBlock,condition);
-            SetResult(Result.Ok);
-            Finish();
-        }
-        #region component_Function
-
         private void Optbtn_Click(object s, EventArgs eA)
         {
             View layout = LayoutInflater.Inflate(Resource.Layout.calcSetting, null);
@@ -138,13 +167,13 @@ namespace BNC0D3
                     //checkFormular(varList, formularTb.Text); TODO:넣기
                     FlowPart fp = new optPart(formula);
                     fp.compoId = View.GenerateViewId();
-                    fp.index = codeBlock.Count;
-                    codeBlock.Add(fp);
+                    fp.index = GetCurrentBlock().Count;
+                    GetCurrentBlock().Add(fp);
 
                     Button optflow = new Button(this)
                     {
                         Text = "출력",
-                        Tag = codeBlock.Count - 1,
+                        Tag = GetCurrentBlock().Count - 1,
                         Id = fp.compoId
                     };
                     optflow.SetTextColor(Color.Rgb(0, 0, 0));
@@ -164,21 +193,21 @@ namespace BNC0D3
                         delb.SetTextColor(Color.Rgb(0, 0, 0));
                         delb.Click += delegate
                         {
-                            codeBlock.RemoveAt(index);
-                            gridflow.RemoveViewAt(index);
+                            GetCurrentBlock().RemoveAt(index);
+                            GetCurrentGrid().RemoveViewAt(index);
                             dialogger.Cancel();
                         };
                         ll.AddView(delb);
                         dialog.SetView(la);
                         EditText formTb = (EditText)la.FindViewById(Resource.Id.formular);
-                        formTb.Text = ((optPart)(codeBlock[index])).formula;
+                        formTb.Text = ((optPart)(GetCurrentBlock()[index])).formula;
                         dialog.SetPositiveButton(Android.Resource.String.Ok, delegate
                         {
                             try
                             {
                                 string form = formTb.Text;
                                 //checkFormular(varList, formularTb.Text);
-                                codeBlock[index] = new optPart(formula);
+                                GetCurrentBlock()[index] = new optPart(formula);
                             }
                             catch (Exception ee)
                             {
@@ -188,7 +217,7 @@ namespace BNC0D3
                         dialogger = dialog.Create();
                         dialogger.Show();
                     };
-                    gridflow.AddView(optflow);
+                    GetCurrentGrid().AddView(optflow);
                 }
                 catch (Exception ee)
                 {
@@ -215,13 +244,13 @@ namespace BNC0D3
                     checkFormular(varList, formularTb.Text);
                     FlowPart fp = new calculationPart(formula);
                     fp.compoId = View.GenerateViewId();
-                    fp.index = codeBlock.Count;
-                    codeBlock.Add(fp);
+                    fp.index = GetCurrentBlock().Count;
+                    GetCurrentBlock().Add(fp);
 
                     Button calcflow = new Button(this)
                     {
                         Text = "연산",
-                        Tag = codeBlock.Count - 1,
+                        Tag = GetCurrentBlock().Count - 1,
                         Id = fp.compoId
                     };
                     calcflow.SetTextColor(Color.Rgb(0, 0, 0));
@@ -241,21 +270,21 @@ namespace BNC0D3
                         delb.SetTextColor(Color.Rgb(0, 0, 0));
                         delb.Click += delegate
                         {
-                            codeBlock.RemoveAt(index);
-                            gridflow.RemoveViewAt(index);
+                            GetCurrentBlock().RemoveAt(index);
+                            GetCurrentGrid().RemoveViewAt(index);
                             dialogger.Cancel();
                         };
                         ll.AddView(delb);
                         dialog.SetView(la);
                         EditText formTb = (EditText)la.FindViewById(Resource.Id.formular);
-                        formTb.Text = ((calculationPart)(codeBlock[index])).formula;
+                        formTb.Text = ((calculationPart)(GetCurrentBlock()[index])).formula;
                         dialog.SetPositiveButton(Android.Resource.String.Ok, delegate
                         {
                             try
                             {
                                 string form = formTb.Text;
                                 checkFormular(varList, formularTb.Text);
-                                codeBlock[index] = new calculationPart(formula);
+                                GetCurrentBlock()[index] = new calculationPart(formula);
                             }
                             catch (Exception ee)
                             {
@@ -265,7 +294,7 @@ namespace BNC0D3
                         dialogger = dialog.Create();
                         dialogger.Show();
                     };
-                    gridflow.AddView(calcflow);
+                    GetCurrentGrid().AddView(calcflow);
                 }
                 catch (Exception ee)
                 {

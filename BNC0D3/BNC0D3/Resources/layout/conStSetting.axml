@@ -62,12 +62,12 @@
             android:minWidth="25px"
             android:minHeight="25px"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/scrollView1">
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
                 <Button
                     android:text="조건"
                     android:textSize="25dip"
@@ -92,13 +92,13 @@
                         android:layout_height="70dip"
                         android:minWidth="70dip"
                         android:id="@+id/conok_button"
-                        android:background="#800080"
+                        android:background="#E0E"
                         android:textColor="#FFFFFF" />
                     <GridLayout
                         android:minWidth="25px"
                         android:minHeight="70dip"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:id="@+id/gridView1"
                         android:columnCount="5"
                         android:rowCount="5" />
@@ -107,9 +107,7 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:minWidth="25px"
                     android:layout_weight="1"
-                    android:minHeight="25px"
                     android:background="#A5FEFA">
                     <Button
                         android:text="조건에 맞지 않는다면"
@@ -118,14 +116,14 @@
                         android:layout_height="70dip"
                         android:minWidth="70dip"
                         android:id="@+id/connot_button"
-                        android:background="#800080"
-                        android:textColor="#FFFFFF" />
+                        android:textColor="#FFFFFF"
+                        android:background="#C0C" />
                     <GridLayout
                         android:minWidth="25px"
                         android:minHeight="70dip"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/gridView1"
+                        android:layout_height="match_parent"
+                        android:id="@+id/gridView2"
                         android:columnCount="5"
                         android:rowCount="5" />
                 </LinearLayout>

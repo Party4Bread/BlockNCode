@@ -21,7 +21,7 @@ using Android.Runtime;
 namespace BNC0D3
 {
     public enum type { number, letter };
-    struct variable
+    public struct variable
     {
         public int id;
         public string name;
@@ -36,7 +36,7 @@ namespace BNC0D3
         private ArrayAdapter<string> m_Adapter;
         private EditText conIpt;
         private ListView conOpt;
-        private Button consumit,defbtn,calcbtn,loopbtn,optbtn,savebtn;        
+        private Button consumit,defbtn,calcbtn,loopbtn,optbtn,savebtn,constbtn;        
         bool codeShow;
         private SlidingDrawer slider;
         List<FlowPart> codeBlock;
@@ -67,6 +67,7 @@ namespace BNC0D3
             slider = FindViewById<SlidingDrawer>(Resource.Id.slidingDrawer1);
             savebtn = FindViewById<Button>(Resource.Id.save_button);
             loopbtn = FindViewById<Button>(Resource.Id.loop_button);
+            constbtn = FindViewById<Button>(Resource.Id.conditianal_button);
             DisplayMetrics displayMetrics = new DisplayMetrics();
             dialog = new AlertDialog.Builder(this);
             WindowManager.DefaultDisplay.GetMetrics(displayMetrics);
@@ -92,6 +93,7 @@ namespace BNC0D3
             savebtn.Click += Savebtn_Click;
             loadbtn.Click += Loadbtn_ClickAsync;
             loopbtn.Click += Loopbtn_Click;
+            constbtn.Click += Constbtn_Click;
             #endregion
             /*
             LinearLayout ll = (LinearLayout)la.RootView;
@@ -103,6 +105,13 @@ namespace BNC0D3
                 gridflow.RemoveViewAt(index);
             };
             ll.AddView(delb);*/
+        }
+
+        private void Constbtn_Click(object sender, EventArgs e)
+        {
+            Intent i = new Intent(this, typeof(ConStActivity));
+            TempStorage.tempOBJ = varList;
+            StartActivityForResult(i, (int)Activitycode.condition);
         }
 
         protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
@@ -140,6 +149,36 @@ namespace BNC0D3
                         //loopfixactivity need vvcccc
                     };
                     gridflow.AddView(loopflow);
+                    break;
+                case Activitycode.condition:
+                    if (TempStorage.tempFP == null)
+                    {
+                        return;
+                    }
+                    FlowPart fpc = TempStorage.tempFP;
+
+                    fpc.compoId = View.GenerateViewId();
+                    fpc.index = codeBlock.Count;
+                    codeBlock.Add(fpc);
+
+                    Button conditionflow = new Button(this)
+                    {
+                        Text = "선택",
+                        Tag = codeBlock.Count - 1,
+                        Id = fpc.compoId
+                    };
+                    conditionflow.SetTextColor(Color.Rgb(0, 0, 0));
+                    conditionflow.SetBackgroundColor(Color.Rgb(0x2A, 0xDA, 0x64));
+                    conditionflow.SetMinHeight(width / 5);
+                    conditionflow.SetMinWidth(width / 5);
+                    conditionflow.SetTextSize(ComplexUnitType.Dip, 25);
+                    conditionflow.Click += (sednder, Dialo) =>
+                    {
+                        Intent i = new Intent(this, typeof(ConStActivity));
+                        StartActivityForResult(i, (int)Activitycode.conditionfix);
+                        //loopfixactivity need vvcccc
+                    };
+                    gridflow.AddView(conditionflow);
                     break;
             }
         }
@@ -196,7 +235,7 @@ namespace BNC0D3
             dialogger.Show();
         }
 
-         #region component_Function
+          #region component_Function
         private void Consumit_Click(object sender, EventArgs e)
         {
             //VTvm.vm.io.read(conIpt.Text);
