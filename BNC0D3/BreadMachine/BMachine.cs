@@ -14,9 +14,9 @@ namespace BreadMachine.Android
     enum Inputtype { number, str };
     struct CodeStack
     {
-        List<XElement> codeList;
-        int currentCode;
-        Status currentStatus;
+        public List<XElement> codeList;
+        public int currentCode;
+        public Status currentStatus;
     }
     public class BMachine : IDisposable
     {
@@ -26,7 +26,6 @@ namespace BreadMachine.Android
         public int blockPoint;
 
         private XDocument currentCode;
-        private List<XElement> codeList;
 
         /// <summary>
         /// 출력 호출시 사용될 함수입니다.
@@ -57,7 +56,7 @@ namespace BreadMachine.Android
             blockPoint = 0;
             isSub = false;
             currentCode = XDocument.Parse(codeBlock);
-            codeList = new List<XElement>(currentCode.Root.Elements());
+            addNewCodeStack(new List<XElement>(currentCode.Root.Elements()));
             //varList = new List<Variable>();
             status = Status.Stop;
             this.onPrint = onPrint;
@@ -70,7 +69,7 @@ namespace BreadMachine.Android
             blockPoint = 0;
             isSub = false;
             currentCode = codeBlock;
-            codeList = new List<XElement>(codeBlock.Root.Elements());
+            addNewCodeStack(new List<XElement>(currentCode.Root.Elements()));
             //varList = new List<Variable>();
             status = Status.Stop;
             this.onPrint = onPrint;
@@ -78,9 +77,99 @@ namespace BreadMachine.Android
             addsubBM = addsub;
         }
 
+        bool endCurrentCodeStack()
+        {
+            codestack.Pop();
+            if (codestack.Count == 0)
+            {
+                return false;
+            }
+            return true;
+        }
+        void addNewCodeStack(List<XElement> code)
+        {
+            codestack.Push(new CodeStack() {codeList=code,currentCode=0,currentStatus=Status.Running});
+        }
+        
+        XElement getCurrentBlock()
+        {
+            if (codestack.Count == 0)
+                return null;
+            var ccstck = codestack.Pop();
+            if (ccstck.currentCode >= ccstck.codeList.Count)
+                if (codestack.Count == 0||isSub)
+                    return null;
+                else
+                    ccstck = codestack.Pop();
+            var ccblck = ccstck.codeList[ccstck.currentCode++];
+            codestack.Push(ccstck);
+            return ccblck;
+        }
         /// <summary>
         /// 코드를 한 블럭 실행시킵니다.
         /// </summary>
+        public bool Step()
+        {
+            XElement curline=getCurrentBlock();
+            if (curline == null)
+                return false;
+            switch (curline.Name.LocalName)
+            {
+                case "def":
+                    if (curline.Attribute("type").Value == "0")
+                    {
+                        evaler.SetVariable(curline.Value, long.Parse(curline.Attribute("value").Value));
+                    }
+                    else
+                    {
+                        evaler.SetVariable(curline.Value, curline.Attribute("value").Value);
+                    }
+                    break;
+                case "calc":
+                    evaler.SetVariable(curline.Value.Split('=')[0], evaler.Eval(curline.Value.Split('=')[1]));
+                    break;
+                case "sel":
+                    if (curline.Attribute("else").Value == "false")
+                    {
+                        if (evaler.Eval<bool>(curline.Attribute("con").Value))
+                        {
+                            addNewCodeStack(new List<XElement>(curline.Elements().First().Elements()));
+                        }
+                    }
+                    else
+                    {
+                        if (evaler.Eval<bool>(curline.Attribute("con").Value))
+                        {
+                            addNewCodeStack(new List<XElement>(curline.Elements().First().Elements()));
+                        }
+                        else
+                        {
+                            addNewCodeStack(new List<XElement>(curline.Elements().Skip(1).First().Elements()));
+                        }
+                    }
+                    break;
+                case "loop":
+                    isSub = true;
+                    while (evaler.Eval<bool>(curline.Attribute("con").Value))
+                    {
+                        addNewCodeStack(new List<XElement>(curline.Elements().First().Elements()));
+                        Runner();
+                        endCurrentCodeStack();
+                        /*
+                        if (getCurrentBlock().status == Status.Break)
+                            break;*/
+                    }
+                    break;
+                case "ivk":
+                    Ivk(curline);
+                    break;
+                case "break":
+                    status = Status.Break;
+                    break;
+            }
+            return true;
+        }
+        /*
         public bool Step()
         {
             XElement curline;
@@ -162,7 +251,7 @@ namespace BreadMachine.Android
             }
             return true;
         }
-
+        */
         /// <summary>
         /// 입력 대기중 실행되면 값을 입력합니다.
         /// </summary>
@@ -233,7 +322,7 @@ namespace BreadMachine.Android
                     break;
                 lock (lockObject)
                 {
-                    Step();
+                    SuccessToExecute=Step();
                 }
             }
 

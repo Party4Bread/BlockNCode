@@ -146,7 +146,7 @@ namespace BNC0D3
                     {
                         Intent i = new Intent(this, typeof(LoopActivity));
                         StartActivityForResult(i, (int)Activitycode.loopfix);
-                        //loopfixactivity need vvcccc
+                        //loopfixactivity need 
                     };
                     gridflow.AddView(loopflow);
                     break;
@@ -176,7 +176,7 @@ namespace BNC0D3
                     {
                         Intent i = new Intent(this, typeof(ConStActivity));
                         StartActivityForResult(i, (int)Activitycode.conditionfix);
-                        //loopfixactivity need vvcccc
+                        //conditionfixactivity need vvcccc
                     };
                     gridflow.AddView(conditionflow);
                     break;

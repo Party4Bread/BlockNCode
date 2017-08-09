@@ -97,7 +97,7 @@ namespace BNC0D3
             //Upper code might be useless.
             //make checkfunction plz
             
-            TempStorage.tempFP = new loopPart(trueBlock,condition);
+            TempStorage.tempFP = new conditionalPart(trueBlock,condition,falseBlock);
             SetResult(Result.Ok);
             Finish();
         }
