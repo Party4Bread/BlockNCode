@@ -12,6 +12,12 @@ namespace BreadMachine.Android
         Running, Stop, Pause, WaitForInput, Break
     }
     enum Inputtype { number, str };
+    struct CodeStack
+    {
+        List<XElement> codeList;
+        int currentCode;
+        Status currentStatus;
+    }
     public class BMachine : IDisposable
     {
         /// <summary>
@@ -26,12 +32,14 @@ namespace BreadMachine.Android
         /// 출력 호출시 사용될 함수입니다.
         /// </summary>
         public Action<string> onPrint;
+        public Action addsubBM;
 
         /// <summary>
         /// 가상머신의 상태입니다
         /// </summary>
         public Status status;
 
+        Stack<CodeStack> codestack = new Stack<CodeStack>();
 
         /// <summary>
         /// 코드가 subMachine에있는지 알려줍니다
@@ -44,7 +52,7 @@ namespace BreadMachine.Android
         private Interpreter evaler;
         private BMachine subBm;
 
-        public BMachine(string codeBlock, Action<string> onPrint = null)
+        public BMachine(string codeBlock, Action<string> onPrint = null,Action addsub=null)
         {
             blockPoint = 0;
             isSub = false;
@@ -54,9 +62,10 @@ namespace BreadMachine.Android
             status = Status.Stop;
             this.onPrint = onPrint;
             evaler = new Interpreter();
+            addsubBM = addsub;
         }
 
-        public BMachine(XDocument codeBlock, Action<string> onPrint = null)
+        public BMachine(XDocument codeBlock, Action<string> onPrint = null,Action addsub=null)
         {
             blockPoint = 0;
             isSub = false;
@@ -66,14 +75,23 @@ namespace BreadMachine.Android
             status = Status.Stop;
             this.onPrint = onPrint;
             evaler = new Interpreter();
+            addsubBM = addsub;
         }
 
         /// <summary>
         /// 코드를 한 블럭 실행시킵니다.
         /// </summary>
-        public void Step()
+        public bool Step()
         {
-            XElement curline = codeList[blockPoint++];
+            XElement curline;
+            try
+            {
+                curline=codeList[blockPoint++];
+            }
+            catch (Exception)
+            {
+                return false;
+            }
             switch (curline.Name.LocalName)
             {
                 case "def":
@@ -142,6 +160,7 @@ namespace BreadMachine.Android
                     status = Status.Break;
                     break;
             }
+            return true;
         }
 
         /// <summary>
@@ -207,7 +226,8 @@ namespace BreadMachine.Android
         {
             object lockObject = new object();
             status = Status.Running;
-            foreach (var meaningless_val in codeList)
+            bool SuccessToExecute = true;
+            while (SuccessToExecute)
             {
                 if (status == Status.Break)
                     break;
