@@ -26,7 +26,7 @@ namespace BNC0D3
         private Button conbtn,conokbtn,connotbtn;
         private Button calcbtn;
         private Button optbtn;
-        private Button exitbtn;
+        private Button exitbtn,deletebtn;
         codePart trueBlock,falseBlock;
         int width;
         AlertDialog.Builder dialog;
@@ -40,7 +40,7 @@ namespace BNC0D3
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-            // Set our view from the "main" layout resource
+            // Set our view from the "m ain" layout resource
             SetContentView(Resource.Layout.conStSetting);
             #region SET_VAR_VALUE
             conbtn = FindViewById<Button>(Resource.Id.con_button);
@@ -51,8 +51,9 @@ namespace BNC0D3
             conokbtn = FindViewById<Button>(Resource.Id.conok_button);
             connotbtn = FindViewById<Button>(Resource.Id.connot_button);
             exitbtn = FindViewById<Button>(Resource.Id.exitbtn);
+            deletebtn = FindViewById<Button>(Resource.Id.deletebtn);
             DisplayMetrics displayMetrics = new DisplayMetrics();
-            dialog = new AlertDialog.Builder(this);
+            dialog = new AlertDialog.Builder(this); 
             WindowManager.DefaultDisplay.GetMetrics(displayMetrics);
             width = displayMetrics.WidthPixels;
             mgr = (InputMethodManager)GetSystemService(InputMethodService);
@@ -63,6 +64,84 @@ namespace BNC0D3
             falseBlock = new codePart();
             varList = TempStorage.tempOBJ as List<variable>;
             TempStorage.tempFP = null;
+            switch (Intent.GetStringExtra("mode"))
+            {
+                case "create":
+                    deletebtn.Visibility = ViewStates.Gone;                    
+                    break;
+                case "fix":
+                    deletebtn.Visibility = ViewStates.Visible;
+                    deletebtn.Click += Deletebtn_Click;
+                    conditionalPart tempcp = TempStorage.tempFP as conditionalPart;
+                    condition=tempcp.condition;
+                    trueBlock=tempcp.truePart;
+                    falseBlock = tempcp.falsePart;
+                    for(int idx=0;idx<tempcp.truePart.Count;idx++)
+                    {
+                        var i = tempcp.truePart[idx];
+                        if(i is calculationPart)
+                        {
+                            try
+                            {
+                                FlowPart fp = i;
+
+                                Button calcflow = new Button(this)
+                                {
+                                    Text = "연산",
+                                    Tag = trueBlock.Count - 1,
+                                    Id = fp.compoId
+                                };
+                                calcflow.SetTextColor(Color.Rgb(0, 0, 0));
+                                calcflow.SetBackgroundColor(Color.Rgb(137, 46, 228));
+                                calcflow.SetMinHeight(width / 5);
+                                calcflow.SetMinWidth(width / 5);
+                                calcflow.SetTextSize(ComplexUnitType.Dip, 25);
+                                calcflow.Click += (sednder, Dialo) =>
+                                {
+                                    int index = Convert.ToInt32(((Button)sednder).Tag.ToString());
+                                    View la = LayoutInflater.Inflate(Resource.Layout.calcSetting, null);
+                                    TextView mN = (TextView)la.FindViewById(Resource.Id.MenuName);
+                                    mN.Text = "계산식";
+                                    LinearLayout ll = (LinearLayout)la.RootView;
+                                    Button delb = new Button(this) { Text = "삭제" };
+                                    delb.SetBackgroundColor(Color.Rgb(255, 0, 0));
+                                    delb.SetTextColor(Color.Rgb(0, 0, 0));
+                                    delb.Click += delegate
+                                    {
+                                        trueBlock.RemoveAt(index);
+                                        trueflow.RemoveViewAt(index);
+                                        dialogger.Cancel();
+                                    };
+                                    ll.AddView(delb);
+                                    dialog.SetView(la);
+                                    EditText formTb = (EditText)la.FindViewById(Resource.Id.formular);
+                                    formTb.Text = ((calculationPart)(GetCurrentBlock()[index])).formula;
+                                    dialog.SetPositiveButton(Android.Resource.String.Ok, delegate
+                                    {
+                                        try
+                                        {
+                                            string form = formTb.Text;
+                                            checkFormular(varList, formularTb.Text);
+                                            GetCurrentBlock()[index] = new calculationPart(formula);
+                                        }
+                                        catch (Exception ee)
+                                        {
+                                            Toast.MakeText(this, ee.Message, ToastLength.Long).Show();
+                                        }
+                                    });
+                                    dialogger = dialog.Create();
+                                    dialogger.Show();
+                                };
+                                GetCurrentGrid().AddView(calcflow);
+                            }
+                            catch (Exception ee)
+                            {
+                                Toast.MakeText(this, ee.Message, ToastLength.Long).Show();
+                            }
+                        }
+                    }
+                    break;
+            }
             #endregion
 
             #region COMPONENT_EVENT
@@ -75,7 +154,20 @@ namespace BNC0D3
             #endregion
         }
 
+        private void Deletebtn_Click(object sender, EventArgs e)
+        {
+            Intent intent = new Intent();
+            intent.PutExtra("status","deleted");
+            if (condition == "" || condition == null)
+            {
+                Toast.MakeText(this, "조건식란이 비어있습니다", ToastLength.Long).Show();
+                return;
+            }
 
+            TempStorage.tempFP = new conditionalPart(trueBlock, condition, falseBlock);
+            SetResult(Result.Ok,intent);
+            Finish();
+        }
 
         private void Exitbtn_Click(object sender, EventArgs e)
         {
@@ -93,10 +185,15 @@ namespace BNC0D3
             //XmlDocument doc = new XmlDocument();
             //doc.AppendChild(GetCurrentBlock().XmlDigest(doc));
             //intent.PutExtra("code",doc.OuterXml);
-            
+
             //Upper code might be useless.
             //make checkfunction plz
-            
+            if (condition == "" || condition == null)
+            {
+                Toast.MakeText(this, "조건식란이 비어있습니다", ToastLength.Long).Show();
+                return;
+            }
+
             TempStorage.tempFP = new conditionalPart(trueBlock,condition,falseBlock);
             SetResult(Result.Ok);
             Finish();

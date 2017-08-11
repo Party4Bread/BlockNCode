@@ -17,6 +17,7 @@ namespace BreadMachine.Android
         public List<XElement> codeList;
         public int currentCode;
         public Status currentStatus;
+        public bool isloop;
     }
     public class BMachine : IDisposable
     {
@@ -40,21 +41,14 @@ namespace BreadMachine.Android
 
         Stack<CodeStack> codestack = new Stack<CodeStack>();
 
-        /// <summary>
-        /// 코드가 subMachine에있는지 알려줍니다
-        /// </summary>
-        bool isSub;
-
         private string input = "";
         private string inputreadyvarname = "";
         private Inputtype inputt;
         private Interpreter evaler;
-        private BMachine subBm;
 
         public BMachine(string codeBlock, Action<string> onPrint = null,Action addsub=null)
         {
             blockPoint = 0;
-            isSub = false;
             currentCode = XDocument.Parse(codeBlock);
             addNewCodeStack(new List<XElement>(currentCode.Root.Elements()));
             //varList = new List<Variable>();
@@ -67,7 +61,6 @@ namespace BreadMachine.Android
         public BMachine(XDocument codeBlock, Action<string> onPrint = null,Action addsub=null)
         {
             blockPoint = 0;
-            isSub = false;
             currentCode = codeBlock;
             addNewCodeStack(new List<XElement>(currentCode.Root.Elements()));
             //varList = new List<Variable>();
@@ -76,7 +69,6 @@ namespace BreadMachine.Android
             evaler = new Interpreter();
             addsubBM = addsub;
         }
-
         bool endCurrentCodeStack()
         {
             codestack.Pop();
@@ -86,9 +78,9 @@ namespace BreadMachine.Android
             }
             return true;
         }
-        void addNewCodeStack(List<XElement> code)
+        void addNewCodeStack(List<XElement> code,bool isloop=false)
         {
-            codestack.Push(new CodeStack() {codeList=code,currentCode=0,currentStatus=Status.Running});
+            codestack.Push(new CodeStack() {codeList=code,currentCode=0,currentStatus=Status.Running,isloop=isloop});
         }
         
         XElement getCurrentBlock()
@@ -97,8 +89,13 @@ namespace BreadMachine.Android
                 return null;
             var ccstck = codestack.Pop();
             if (ccstck.currentCode >= ccstck.codeList.Count)
-                if (codestack.Count == 0||isSub)
+                if (codestack.Count == 0)
                     return null;
+                else if(ccstck.isloop)
+                {
+                    codestack.Push(ccstck);
+                    return null;
+                }
                 else
                     ccstck = codestack.Pop();
             var ccblck = ccstck.codeList[ccstck.currentCode++];
@@ -135,7 +132,7 @@ namespace BreadMachine.Android
                         {
                             addNewCodeStack(new List<XElement>(curline.Elements().First().Elements()));
                         }
-                    }
+                    } 
                     else
                     {
                         if (evaler.Eval<bool>(curline.Attribute("con").Value))
@@ -149,15 +146,12 @@ namespace BreadMachine.Android
                     }
                     break;
                 case "loop":
-                    isSub = true;
                     while (evaler.Eval<bool>(curline.Attribute("con").Value))
                     {
-                        addNewCodeStack(new List<XElement>(curline.Elements().First().Elements()));
-                        Runner();
-                        endCurrentCodeStack();
-                        /*
-                        if (getCurrentBlock().status == Status.Break)
-                            break;*/
+                        addNewCodeStack(new List<XElement>(curline.Elements().First().Elements()),true);
+                        Runner();                        
+                        if (codestack.Pop().currentStatus == Status.Break)
+                            break;
                     }
                     break;
                 case "ivk":
@@ -259,15 +253,8 @@ namespace BreadMachine.Android
         /// <returns>true면 입력이 처리된겁니다</returns>
         public bool Input(string a)
         {
-            if(isSub)
-            {
-                return subBm.Input(a);
-            }
-            else
-            {
-                input = status == Status.WaitForInput ? a : input;
-                return status == Status.WaitForInput;
-            }
+            input = status == Status.WaitForInput ? a : input;
+            return status == Status.WaitForInput;
         }
 
         private void WaitForInput()

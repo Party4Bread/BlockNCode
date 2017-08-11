@@ -114,10 +114,14 @@ namespace BNC0D3
             //XmlDocument doc = new XmlDocument();
             //doc.AppendChild(codeBlock.XmlDigest(doc));
             //intent.PutExtra("code",doc.OuterXml);
-            
+
             //Upper code might be useless.
             //make checkfunction plz
-            
+            if (condition==""||condition==null)
+            {
+                Toast.MakeText(this, "조건식란이 비어있습니다", ToastLength.Long).Show();
+                return;
+            }
             TempStorage.tempFP = new loopPart(codeBlock,condition);
             SetResult(Result.Ok);
             Finish();

@@ -110,6 +110,7 @@ namespace BNC0D3
         private void Constbtn_Click(object sender, EventArgs e)
         {
             Intent i = new Intent(this, typeof(ConStActivity));
+            i.PutExtra("mode", "create");
             TempStorage.tempOBJ = varList;
             StartActivityForResult(i, (int)Activitycode.condition);
         }
@@ -145,6 +146,8 @@ namespace BNC0D3
                     loopflow.Click += (sednder, Dialo) =>
                     {
                         Intent i = new Intent(this, typeof(LoopActivity));
+                        i.PutExtra("mode", "fix");
+                        TempStorage.tempFP = fp;
                         StartActivityForResult(i, (int)Activitycode.loopfix);
                         //loopfixactivity need 
                     };
@@ -175,10 +178,35 @@ namespace BNC0D3
                     conditionflow.Click += (sednder, Dialo) =>
                     {
                         Intent i = new Intent(this, typeof(ConStActivity));
+                        i.PutExtra("mode", "fix");
+                        TempStorage.tempFP = fpc;
+                        TempStorage.tempINT = fpc.index;
                         StartActivityForResult(i, (int)Activitycode.conditionfix);
-                        //conditionfixactivity need vvcccc
+                        //conditionfixactivity need vvxccccvvx
                     };
                     gridflow.AddView(conditionflow);
+                    break;
+                case Activitycode.conditionfix:
+                    if(Intent.GetStringExtra("status")=="deleted")
+                    {
+                        codeBlock.RemoveAt(TempStorage.tempINT);
+                        gridflow.RemoveViewAt(TempStorage.tempINT);
+                    }
+                    else
+                    {
+                        codeBlock[TempStorage.tempINT] = TempStorage.tempFP;
+                    }
+                    break;
+                case Activitycode.loopfix:
+                    if (Intent.GetStringExtra("status") == "deleted")
+                    {
+                        codeBlock.RemoveAt(TempStorage.tempINT);
+                        gridflow.RemoveViewAt(TempStorage.tempINT);
+                    }
+                    else
+                    {
+                        codeBlock[TempStorage.tempINT] = TempStorage.tempFP;
+                    }
                     break;
             }
         }
@@ -186,6 +214,7 @@ namespace BNC0D3
         private void Loopbtn_Click(object sender, EventArgs e)
         {
             Intent i = new Intent(this, typeof(LoopActivity));
+            i.PutExtra("mode", "create");
             TempStorage.tempOBJ = varList;
             StartActivityForResult(i,(int)Activitycode.loop);
         }
@@ -235,7 +264,7 @@ namespace BNC0D3
             dialogger.Show();
         }
 
-          #region component_Function
+        #region component_Function
         private void Consumit_Click(object sender, EventArgs e)
         {
             //VTvm.vm.io.read(conIpt.Text);
@@ -532,7 +561,7 @@ namespace BNC0D3
                 try
                 {
                     string formula = formularTb.Text;
-                    //checkFormular(varList, formularTb.Text); TODO:넣기
+                    checkFormular(varList, formularTb.Text); //TODO:넣기
                     FlowPart fp = new optPart(formula);
                     fp.compoId = View.GenerateViewId();
                     fp.index = codeBlock.Count;
