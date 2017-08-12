@@ -88,16 +88,23 @@ namespace BreadMachine.Android
             if (codestack.Count == 0)
                 return null;
             var ccstck = codestack.Pop();
-            if (ccstck.currentCode >= ccstck.codeList.Count)
-                if (codestack.Count == 0)
-                    return null;
-                else if(ccstck.isloop)
-                {
-                    codestack.Push(ccstck);
-                    return null;
-                }
-                else
-                    ccstck = codestack.Pop();
+            if (ccstck.codeList.Count == 0)
+                return null;
+            int prevcnt = 0;
+            while (prevcnt!=codestack.Count)
+            {
+                prevcnt = codestack.Count;
+                if (ccstck.currentCode >= ccstck.codeList.Count)
+                    if (codestack.Count == 0)
+                        return null;
+                    else if (ccstck.isloop)
+                    {
+                        codestack.Push(ccstck);
+                        return null;
+                    }
+                    else
+                        ccstck = codestack.Pop();
+            }
             var ccblck = ccstck.codeList[ccstck.currentCode++];
             codestack.Push(ccstck);
             return ccblck;

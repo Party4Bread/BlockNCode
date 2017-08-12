@@ -121,70 +121,85 @@ namespace BNC0D3
             switch ((Activitycode)requestCode)
             {
                 case Activitycode.loop:
-                    if (TempStorage.tempFP == null)
+                    if (resultCode == Result.Ok)
+                    {
+                        if (TempStorage.tempFP == null)
+                        {
+                            return;
+                        }
+
+                        FlowPart fp = TempStorage.tempFP;
+
+                        fp.compoId = View.GenerateViewId();
+                        fp.index = codeBlock.Count;
+                        codeBlock.Add(fp);
+
+                        Button loopflow = new Button(this)
+                        {
+                            Text = "반복",
+                            Tag = codeBlock.Count - 1,
+                            Id = fp.compoId
+                        };
+                        loopflow.SetTextColor(Color.Rgb(0, 0, 0));
+                        loopflow.SetBackgroundColor(Color.Rgb(204, 131, 20));
+                        loopflow.SetMinHeight(width / 5);
+                        loopflow.SetMinWidth(width / 5);
+                        loopflow.SetTextSize(ComplexUnitType.Dip, 25);
+                        loopflow.Click += (sednder, Dialo) =>
+                        {
+                            Intent i = new Intent(this, typeof(LoopActivity));
+                            i.PutExtra("mode", "fix");
+                            TempStorage.tempFP = fp;
+                            StartActivityForResult(i, (int)Activitycode.loopfix);
+                            //loopfixactivity need 
+                        };
+                        gridflow.AddView(loopflow);
+                    }
+                    else
                     {
                         return;
                     }
-
-                    FlowPart fp = TempStorage.tempFP;
-                    
-                    fp.compoId = View.GenerateViewId();
-                    fp.index = codeBlock.Count;
-                    codeBlock.Add(fp);
-
-                    Button loopflow = new Button(this)
-                    {
-                        Text = "반복",
-                        Tag = codeBlock.Count - 1,
-                        Id = fp.compoId
-                    };
-                    loopflow.SetTextColor(Color.Rgb(0, 0, 0));
-                    loopflow.SetBackgroundColor(Color.Rgb(204, 131, 20));
-                    loopflow.SetMinHeight(width / 5);
-                    loopflow.SetMinWidth(width / 5);
-                    loopflow.SetTextSize(ComplexUnitType.Dip, 25);
-                    loopflow.Click += (sednder, Dialo) =>
-                    {
-                        Intent i = new Intent(this, typeof(LoopActivity));
-                        i.PutExtra("mode", "fix");
-                        TempStorage.tempFP = fp;
-                        StartActivityForResult(i, (int)Activitycode.loopfix);
-                        //loopfixactivity need 
-                    };
-                    gridflow.AddView(loopflow);
                     break;
                 case Activitycode.condition:
-                    if (TempStorage.tempFP == null)
+                    if (resultCode == Result.Ok)
+                    {
+                        if (TempStorage.tempFP == null)
+                        {
+                            return;
+                        }
+                        FlowPart fpc = TempStorage.tempFP;
+
+                        fpc.compoId = View.GenerateViewId();
+                        fpc.index = codeBlock.Count;
+
+                        Button conditionflow = new Button(this)
+                        {
+                            Text = "선택",
+                            Tag = codeBlock.Count,
+                            Id = fpc.compoId
+                        };
+                        conditionflow.SetTextColor(Color.Rgb(0, 0, 0));
+                        conditionflow.SetBackgroundColor(Color.Rgb(0x2A, 0xDA, 0x64));
+                        conditionflow.SetMinHeight(width / 5);
+                        conditionflow.SetMinWidth(width / 5);
+                        conditionflow.SetTextSize(ComplexUnitType.Dip, 25);
+                        conditionflow.Click += (sednder, Dialo) =>
+                        {
+                            fpc = codeBlock[int.Parse((sednder as Button).Tag.ToString())];
+                            Intent i = new Intent(this, typeof(ConStActivity));
+                            i.PutExtra("mode", "fix");
+                            TempStorage.tempFP = fpc;
+                            TempStorage.tempINT = fpc.index;
+                            StartActivityForResult(i, (int)Activitycode.conditionfix);
+                        //conditionfixactivity need vvxccccvvx
+                        };
+                        gridflow.AddView(conditionflow);
+                        codeBlock.Add(fpc);
+                    }
+                    else
                     {
                         return;
                     }
-                    FlowPart fpc = TempStorage.tempFP;
-
-                    fpc.compoId = View.GenerateViewId();
-                    fpc.index = codeBlock.Count;
-                    codeBlock.Add(fpc);
-
-                    Button conditionflow = new Button(this)
-                    {
-                        Text = "선택",
-                        Tag = codeBlock.Count - 1,
-                        Id = fpc.compoId
-                    };
-                    conditionflow.SetTextColor(Color.Rgb(0, 0, 0));
-                    conditionflow.SetBackgroundColor(Color.Rgb(0x2A, 0xDA, 0x64));
-                    conditionflow.SetMinHeight(width / 5);
-                    conditionflow.SetMinWidth(width / 5);
-                    conditionflow.SetTextSize(ComplexUnitType.Dip, 25);
-                    conditionflow.Click += (sednder, Dialo) =>
-                    {
-                        Intent i = new Intent(this, typeof(ConStActivity));
-                        i.PutExtra("mode", "fix");
-                        TempStorage.tempFP = fpc;
-                        TempStorage.tempINT = fpc.index;
-                        StartActivityForResult(i, (int)Activitycode.conditionfix);
-                        //conditionfixactivity need vvxccccvvx
-                    };
-                    gridflow.AddView(conditionflow);
                     break;
                 case Activitycode.conditionfix:
                     if(Intent.GetStringExtra("status")=="deleted")
