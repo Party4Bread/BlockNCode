@@ -47,6 +47,26 @@
                     android:background="#FF4848"
                     android:textColor="#FFFFFF" />
                 <Button
+                    android:text="반복"
+                    android:textSize="25dip"
+                    android:layout_width="70dip"
+                    android:layout_height="70dip"
+                    android:minWidth="70dip"
+                    android:id="@+id/loop_button"
+                    android:layout_margin="5dip"
+                    android:background="#CC8314"
+                    android:textColor="#FFFFFF" />
+                <Button
+                    android:text="선택"
+                    android:textSize="25dip"
+                    android:layout_width="70dip"
+                    android:layout_height="70dip"
+                    android:minWidth="70dip"
+                    android:id="@+id/conditianal_button"
+                    android:layout_margin="5dip"
+                    android:background="#2AD464"
+                    android:textColor="#FFFFFF" />
+                <Button
                     android:text="나가기"
                     android:textSize="25dip"
                     android:layout_width="75dip"
@@ -55,6 +75,16 @@
                     android:id="@+id/exitbtn"
                     android:layout_margin="5dip"
                     android:background="#000000"
+                    android:textColor="#FFFFFF" />
+                <Button
+                    android:text="삭제"
+                    android:textSize="25dip"
+                    android:layout_width="75dip"
+                    android:layout_height="70dip"
+                    android:minWidth="70dip"
+                    android:id="@+id/deletebtn"
+                    android:layout_margin="5dip"
+                    android:background="#B00"
                     android:textColor="#FFFFFF" />
             </LinearLayout>
         </HorizontalScrollView>

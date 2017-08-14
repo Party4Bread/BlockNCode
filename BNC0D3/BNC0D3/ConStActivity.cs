@@ -39,6 +39,7 @@ namespace BNC0D3
         InputMethodManager mgr;
         string condition;
         bool isSelectedBlockTrue;
+        private int focusindex;
         #endregion
         protected override void OnCreate(Bundle bundle)
         {
@@ -492,6 +493,12 @@ namespace BNC0D3
             base.OnActivityResult(requestCode, resultCode, data);
             codePart currentBlock = GetCurrentBlock();
             GridLayout currentGrid = GetCurrentGrid();
+            if (data.GetStringExtra("status") == "deleted")
+            {
+                currentBlock.RemoveAt(focusindex);
+                currentGrid.RemoveViewAt(focusindex);
+                return;
+            }
             switch ((Activitycode)requestCode)
             {
                 case Activitycode.loop:
@@ -523,6 +530,7 @@ namespace BNC0D3
                         TempStorage.tempFP = fp;
                         TempStorage.tempFP2 = currentBlock;
                         TempStorage.tempOBJ = currentGrid;
+                        focusindex = fp.index;
                         StartActivityForResult(i, (int)Activitycode.loopfix);
                         //loopfixactivity need 
                     };
@@ -555,7 +563,7 @@ namespace BNC0D3
                         Intent i = new Intent(this, typeof(ConStActivity));
                         i.PutExtra("mode", "fix");
                         TempStorage.tempFP = fpc;
-                        TempStorage.tempINT = fpc.index;
+                        TempStorage.tempINT = focusindex = fpc.index;
                         TempStorage.tempFP2 = currentBlock;
                         TempStorage.tempOBJ = currentGrid;
                         StartActivityForResult(i, (int)Activitycode.conditionfix);
@@ -636,6 +644,7 @@ namespace BNC0D3
             //XmlDocument doc = new XmlDocument();
             //doc.AppendChild(GetCurrentBlock().XmlDigest(doc));
             //intent.PutExtra("code",doc.OuterXml);
+            Intent intent = new Intent();
 
             //Upper code might be useless.
             //make checkfunction plz
@@ -644,7 +653,8 @@ namespace BNC0D3
                 Toast.MakeText(this, "조건식란이 비어있습니다. 뒤로 가려면 2번 누르세요", ToastLength.Long).Show();
                 if(new TimeSpan(DateTime.Now.Ticks - lastexittry).TotalSeconds < 1)
                 {
-                    SetResult(Result.Canceled);
+                    intent.PutExtra("status", "GOOD");
+                    SetResult(Result.Canceled,intent);
                     Finish();
                 }
                 else
@@ -653,8 +663,9 @@ namespace BNC0D3
                 }
                 return;
             }
+            intent.PutExtra("status", "GOOD");
             TempStorage.tempFP = new conditionalPart(trueBlock,condition,falseBlock);
-            SetResult(Result.Ok);
+            SetResult(Result.Ok,intent);
             Finish();
         }
 

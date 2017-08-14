@@ -41,6 +41,7 @@ namespace BNC0D3
         private SlidingDrawer slider;
         List<FlowPart> codeBlock;
         int width;
+        int focusindex;
         AlertDialog.Builder dialog;
         AlertDialog dialogger;
         public GridLayout gridflow { get; private set; }
@@ -118,6 +119,12 @@ namespace BNC0D3
         protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
         {
             base.OnActivityResult(requestCode, resultCode, data);
+            if (data.GetStringExtra("status") == "deleted")
+            {
+                codeBlock.RemoveAt(focusindex);
+                gridflow.RemoveViewAt(focusindex);
+                return;   
+            }
             switch ((Activitycode)requestCode)
             {
                 case Activitycode.loop:
@@ -132,12 +139,11 @@ namespace BNC0D3
 
                         fp.compoId = View.GenerateViewId();
                         fp.index = codeBlock.Count;
-                        codeBlock.Add(fp);
 
                         Button loopflow = new Button(this)
                         {
                             Text = "반복",
-                            Tag = codeBlock.Count - 1,
+                            Tag = codeBlock.Count,
                             Id = fp.compoId
                         };
                         loopflow.SetTextColor(Color.Rgb(0, 0, 0));
@@ -147,13 +153,16 @@ namespace BNC0D3
                         loopflow.SetTextSize(ComplexUnitType.Dip, 25);
                         loopflow.Click += (sednder, Dialo) =>
                         {
+                            fp = codeBlock[int.Parse((sednder as Button).Tag.ToString())];
+                            TempStorage.tempFP = fp;
+                            TempStorage.tempINT =focusindex= fp.index;
                             Intent i = new Intent(this, typeof(LoopActivity));
                             i.PutExtra("mode", "fix");
-                            TempStorage.tempFP = fp;
                             StartActivityForResult(i, (int)Activitycode.loopfix);
                             //loopfixactivity need 
                         };
                         gridflow.AddView(loopflow);
+                        codeBlock.Add(fp);
                     }
                     else
                     {
@@ -189,7 +198,7 @@ namespace BNC0D3
                             Intent i = new Intent(this, typeof(ConStActivity));
                             i.PutExtra("mode", "fix");
                             TempStorage.tempFP = fpc;
-                            TempStorage.tempINT = fpc.index;
+                            TempStorage.tempINT = focusindex = fpc.index;
                             StartActivityForResult(i, (int)Activitycode.conditionfix);
                         //conditionfixactivity need vvxccccvvx
                         };
@@ -202,25 +211,39 @@ namespace BNC0D3
                     }
                     break;
                 case Activitycode.conditionfix:
-                    if(Intent.GetStringExtra("status")=="deleted")
+                    if (resultCode==Result.Ok)
                     {
-                        codeBlock.RemoveAt(TempStorage.tempINT);
-                        gridflow.RemoveViewAt(TempStorage.tempINT);
+                        if (Intent.GetStringExtra("status") == "deleted")
+                        {
+                            codeBlock.RemoveAt(TempStorage.tempINT);
+                            gridflow.RemoveViewAt(TempStorage.tempINT);
+                        }
+                        else
+                        {
+                            codeBlock[TempStorage.tempINT] = TempStorage.tempFP;
+                        }
                     }
                     else
                     {
-                        codeBlock[TempStorage.tempINT] = TempStorage.tempFP;
+                        return;
                     }
                     break;
                 case Activitycode.loopfix:
-                    if (Intent.GetStringExtra("status") == "deleted")
+                    if (resultCode == Result.Ok)
                     {
-                        codeBlock.RemoveAt(TempStorage.tempINT);
-                        gridflow.RemoveViewAt(TempStorage.tempINT);
+                        if (Intent.GetStringExtra("status") == "deleted")
+                        {
+                            codeBlock.RemoveAt(TempStorage.tempINT);
+                            gridflow.RemoveViewAt(TempStorage.tempINT);
+                        }
+                        else
+                        {
+                            codeBlock[TempStorage.tempINT] = TempStorage.tempFP;
+                        }
                     }
                     else
                     {
-                        codeBlock[TempStorage.tempINT] = TempStorage.tempFP;
+                        return;
                     }
                     break;
             }
