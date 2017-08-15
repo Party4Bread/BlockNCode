@@ -28,6 +28,24 @@ namespace BNC0D3.Parts
             }
             this.condition = condition;
         }
+        public conditionalPart(string xml)
+        {
+            XmlDocument xmlcode = new XmlDocument();
+            xmlcode.LoadXml(xml);
+            if (xmlcode.Attributes["else"].Value=="false")
+            {
+                elsestate = false;
+                truePart=new codePart(xmlcode.FirstChild.OuterXml);
+                condition = xmlcode.Attributes["con"].Value;
+            }
+            else
+            {
+                elsestate = false;
+                truePart = new codePart(xmlcode.FirstChild.OuterXml);
+                falsePart = new codePart(xmlcode.LastChild.OuterXml);
+                condition = xmlcode.Attributes["con"].Value;
+            }
+        }
         public override string Digest()
         {
             if (!elsestate)

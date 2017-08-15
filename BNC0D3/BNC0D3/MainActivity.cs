@@ -39,7 +39,7 @@ namespace BNC0D3
         private Button consumit,defbtn,calcbtn,loopbtn,optbtn,savebtn,constbtn;        
         bool codeShow;
         private SlidingDrawer slider;
-        List<FlowPart> codeBlock;
+        codePart codeBlock;
         int width;
         int focusindex;
         AlertDialog.Builder dialog;
@@ -79,7 +79,7 @@ namespace BNC0D3
             conOpt.Adapter = m_Adapter;
             conIpt.ImeOptions = Android.Views.InputMethods.ImeAction.Done;
             //value4code
-            codeBlock = new List<FlowPart>();
+            codeBlock = new codePart();
             varList = new List<variable>();
             #endregion
 
@@ -92,7 +92,7 @@ namespace BNC0D3
             calcbtn.Click += Calcbtn_Click;
             optbtn.Click += Optbtn_Click;
             savebtn.Click += Savebtn_Click;
-            loadbtn.Click += Loadbtn_ClickAsync;
+            loadbtn.Click += Loadbtn_Click;
             loopbtn.Click += Loopbtn_Click;
             constbtn.Click += Constbtn_Click;
             #endregion
@@ -119,6 +119,220 @@ namespace BNC0D3
         protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
         {
             base.OnActivityResult(requestCode, resultCode, data);
+            if (resultCode != Result.Ok)
+            {
+                return;
+            }
+            if (requestCode == 200)
+            {
+                var _uri = data.Data;
+                string filePath = _uri.Path.Replace("/file/file","");
+                XmlDocument loaddoc = new XmlDocument();
+                codeBlock = new codePart();
+                gridflow.RemoveAllViews();
+                loaddoc.Load(filePath);
+                var rawCodeBlock = new codePart(loaddoc.InnerXml);
+                for (int j = 0; j < rawCodeBlock.Count; j++)
+                {
+                    var i = rawCodeBlock[j];
+                    if (i is definePart)
+                    {
+                        var cv = new variable() { type = ((i as definePart).defType == DefType.Number ? type.number : type.letter), id = View.GenerateViewId(), name = (i as definePart).defName, value = (i as definePart).defValue };
+                        varList.Add(cv);
+                    }
+                    else if (i is calculationPart)
+                    {
+                        try
+                        {
+                            codePart currentBlock = codeBlock;
+                            GridLayout currentGrid = gridflow;
+                            string formula = (i as calculationPart).formula;
+                            FlowPart fp = i;
+                            fp.compoId = View.GenerateViewId();
+                            fp.index = codeBlock.Count;
+
+                            Button calcflow = new Button(this)
+                            {
+                                Text = "연산",
+                                Tag = fp.index,
+                                Id = fp.compoId
+                            };
+                            calcflow.SetTextColor(Color.Rgb(0, 0, 0));
+                            calcflow.SetBackgroundColor(Color.Rgb(137, 46, 228));
+                            calcflow.SetMinHeight(width / 5);
+                            calcflow.SetMinWidth(width / 5);
+                            calcflow.SetTextSize(ComplexUnitType.Dip, 25);
+                            calcflow.Click += (sednder, Dialo) =>
+                            {
+                                int index = Convert.ToInt32(((Button)sednder).Tag.ToString());
+                                View la = LayoutInflater.Inflate(Resource.Layout.calcSetting, null);
+                                TextView mN = (TextView)la.FindViewById(Resource.Id.MenuName);
+                                mN.Text = "계산식";
+                                LinearLayout ll = (LinearLayout)la.RootView;
+                                Button delb = new Button(this) { Text = "삭제" };
+                                delb.SetBackgroundColor(Color.Rgb(255, 0, 0));
+                                delb.SetTextColor(Color.Rgb(0, 0, 0));
+                                delb.Click += delegate
+                                {
+                                    currentBlock.RemoveAt(index);
+                                    currentGrid.RemoveViewAt(index);
+                                    dialogger.Cancel();
+                                };
+                                ll.AddView(delb);
+                                dialog.SetView(la);
+                                EditText formTb = (EditText)la.FindViewById(Resource.Id.formular);
+                                formTb.Text = ((calculationPart)(currentBlock[index])).formula;
+                                dialog.SetPositiveButton(Android.Resource.String.Ok, delegate
+                                {
+                                    try
+                                    {
+                                        string form = formTb.Text;
+                                        checkFormular(varList, formTb.Text);
+                                        currentBlock[index] = new calculationPart(formula);
+                                    }
+                                    catch (Exception ee)
+                                    {
+                                        Toast.MakeText(this, ee.Message, ToastLength.Long).Show();
+                                    }
+                                });
+                                dialogger = dialog.Create();
+                                dialogger.Show();
+                            };
+                            currentBlock.Add(fp);
+                            currentGrid.AddView(calcflow);
+                        }
+                        catch (Exception ee)
+                        {
+                            Toast.MakeText(this, ee.Message, ToastLength.Long).Show();
+                        }
+                    }
+                    else if (i is optPart)
+                    {
+                        try
+                        {
+                            codePart currentBlock = codeBlock;
+                            GridLayout currentGrid = gridflow;
+                            string formula = (i as optPart).formula;
+                            FlowPart fp = i;
+                            fp.compoId = View.GenerateViewId();
+                            fp.index = codeBlock.Count;
+
+                            Button optflow = new Button(this)
+                            {
+                                Text = "출력",
+                                Tag = currentBlock.Count,
+                                Id = fp.compoId
+                            };
+                            optflow.SetTextColor(Color.Rgb(0, 0, 0));
+                            optflow.SetBackgroundColor(Color.Rgb(255, 72, 72));
+                            optflow.SetMinHeight(width / 5);
+                            optflow.SetMinWidth(width / 5);
+                            optflow.SetTextSize(ComplexUnitType.Dip, 25);
+                            optflow.Click += (sednder, Dialo) =>
+                            {
+                                int index = Convert.ToInt32(((Button)sednder).Tag.ToString());
+                                View la = LayoutInflater.Inflate(Resource.Layout.calcSetting, null);
+                                TextView mN = (TextView)la.FindViewById(Resource.Id.MenuName);
+                                mN.Text = "출력 수식";
+                                LinearLayout ll = (LinearLayout)la.RootView;
+                                Button delb = new Button(this) { Text = "삭제" };
+                                delb.SetBackgroundColor(Color.Rgb(255, 0, 0));
+                                delb.SetTextColor(Color.Rgb(0, 0, 0));
+                                delb.Click += delegate
+                                {
+                                    currentBlock.RemoveAt(index);
+                                    currentGrid.RemoveViewAt(index);
+                                    dialogger.Cancel();
+                                };
+                                ll.AddView(delb);
+                                dialog.SetView(la);
+                                EditText formTb = (EditText)la.FindViewById(Resource.Id.formular);
+                                formTb.Text = ((optPart)(currentBlock[index])).formula;
+                                dialog.SetPositiveButton(Android.Resource.String.Ok, delegate
+                                {
+                                    try
+                                    {
+                                        string form = formTb.Text;
+                                        checkFormular(varList, formTb.Text);
+                                        currentBlock[index] = new optPart(formula);
+                                    }
+                                    catch (Exception ee)
+                                    {
+                                        Toast.MakeText(this, ee.Message, ToastLength.Long).Show();
+                                    }
+                                });
+                                dialogger = dialog.Create();
+                                dialogger.Show();
+                            };
+                            currentGrid.AddView(optflow);
+                            currentBlock.Add(fp);
+                        }
+                        catch (Exception ee)
+                        {
+                            Toast.MakeText(this, ee.Message, ToastLength.Long).Show();
+                        }
+                    }
+                    else if (i is conditionalPart)
+                    {
+                        FlowPart fpc = i;
+
+                        fpc.compoId = View.GenerateViewId();
+                        fpc.index = codeBlock.Count;
+
+                        Button conditionflow = new Button(this)
+                        {
+                            Text = "선택",
+                            Tag = fpc.index,
+                            Id = fpc.compoId
+                        };
+                        conditionflow.SetTextColor(Color.Rgb(0, 0, 0));
+                        conditionflow.SetBackgroundColor(Color.Rgb(0x2A, 0xDA, 0x64));
+                        conditionflow.SetMinHeight(width / 5);
+                        conditionflow.SetMinWidth(width / 5);
+                        conditionflow.SetTextSize(ComplexUnitType.Dip, 25);
+                        conditionflow.Click += (sednder, Dialo) =>
+                        {
+                            Intent inte = new Intent(this, typeof(ConStActivity));
+                            inte.PutExtra("mode", "fix");
+                            TempStorage.tempFP = fpc;
+                            TempStorage.tempINT = fpc.index;
+                            StartActivityForResult(inte, (int)Activitycode.conditionfix);
+                            //conditionfixactivity need vvxccccvvx
+                        };
+                        codeBlock.Add(fpc);
+                        gridflow.AddView(conditionflow);
+                    }
+                    else if (i is loopPart)
+                    {
+                        FlowPart fp = i;
+
+                        fp.compoId = View.GenerateViewId();
+                        fp.index = codeBlock.Count;
+
+                        Button loopflow = new Button(this)
+                        {
+                            Text = "반복",
+                            Tag = fp.index,
+                            Id = fp.compoId
+                        };
+                        loopflow.SetTextColor(Color.Rgb(0, 0, 0));
+                        loopflow.SetBackgroundColor(Color.Rgb(204, 131, 20));
+                        loopflow.SetMinHeight(width / 5);
+                        loopflow.SetMinWidth(width / 5);
+                        loopflow.SetTextSize(ComplexUnitType.Dip, 25);
+                        loopflow.Click += (sednder, Dialo) =>
+                        {
+                            Intent inte = new Intent(this, typeof(LoopActivity));
+                            inte.PutExtra("mode", "fix");
+                            TempStorage.tempFP = fp;
+                            StartActivityForResult(inte, (int)Activitycode.loopfix);
+                            //loopfixactivity need 
+                        };
+                        gridflow.AddView(loopflow);
+                        codeBlock.Add(fp);
+                    }
+                }
+            }
             if (data.GetStringExtra("status") == "deleted")
             {
                 codeBlock.RemoveAt(focusindex);
@@ -257,27 +471,22 @@ namespace BNC0D3
             StartActivityForResult(i,(int)Activitycode.loop);
         }
 
-        private async void Loadbtn_ClickAsync(object sender, EventArgs e)
+        private void Loadbtn_Click(object sender, EventArgs e)
         {
-            FileData loadxmlfile = await CrossFilePicker.Current.PickFile();
-            XmlDocument loaddoc = new XmlDocument();
-            loaddoc.LoadXml(Encoding.UTF8.GetString(loadxmlfile.DataArray));
-            foreach(XmlElement i in loaddoc.ChildNodes)
+            Toast.MakeText(this, "저장된파일은 sd카드의 BNC_SAVE폴더 내에 있습니다", ToastLength.Long).Show();
+            var intent = new Intent(Intent.ActionGetContent);
+            intent.SetType("text/xml");
+
+            //intent.AddCategory(Intent.CategoryOpenable);
+            //intent.AddCategory(Intent.ExtraLocalOnly);
+            //intent.AddCategory(Intent.ExtraMimeTypes);
+            try
             {
-                switch(i.OuterXml)
-                {
-                    case "def":
-                        //FlowPart a = new definePart();
-                        break;
-                    case "calc":
-                        break;
-                    case "loop":
-                        break;
-                    case "opt":
-                        break;
-                    case "":
-                        break;
-                }
+                StartActivityForResult(Intent.CreateChooser(intent, "Select file"), 200);
+            }
+            catch (Exception exAct)
+            {
+                System.Diagnostics.Debug.Write(exAct);
             }
         }
 
@@ -293,9 +502,22 @@ namespace BNC0D3
             //레이아웃설정
             dialog.SetPositiveButton(Android.Resource.String.Ok, (sendder, ee) =>
             {
-                foreach (FlowPart f in codeBlock)
-                    savedoc.AppendChild(f.XmlDigest(savedoc));
-                savedoc.Save(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/BNC_SAVE/" + filenameTb.Text);
+                XmlDocument code = new XmlDocument();
+                XmlElement cd = code.CreateElement("code");
+                codePart varCode = new codePart();
+                foreach (variable i in varList)
+                {
+                    varCode.Add(new definePart(i.type == type.letter ? DefType.String : DefType.Number, i.name, i.value.ToString()));
+                }
+
+                //varCode.(codeBlock);
+                codeBlock = varCode+codeBlock;
+                foreach (FlowPart i in codeBlock)
+                {
+                    cd.AppendChild(i.XmlDigest(code));
+                }
+                code.AppendChild(cd);
+                code.Save(Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/BNC_SAVE/" + filenameTb.Text+".xml");
                 Toast.MakeText(this, "Done!", ToastLength.Short).Show();
             });
             dialogger = dialog.Create();
@@ -558,13 +780,12 @@ namespace BNC0D3
             {
                 XmlDocument code = new XmlDocument();
                 XmlElement cd = code.CreateElement("code");
-                List<FlowPart> varCode = new List<FlowPart>();
+                codePart varCode = new codePart();
                 foreach (variable i in varList)
                 {
                     varCode.Add(new definePart(i.type == type.letter ? DefType.String : DefType.Number, i.name, i.value.ToString()));
                 }
-                varCode.AddRange(codeBlock);
-                codeBlock = varCode;
+                codeBlock = varCode + codeBlock;
                 foreach (FlowPart i in codeBlock)
                 {
                     cd.AppendChild(i.XmlDigest(code));

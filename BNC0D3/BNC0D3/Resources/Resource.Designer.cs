@@ -67,7 +67,6 @@ namespace BNC0D3
 			global::BreadMachine.Resource.String.Hello = global::BNC0D3.Resource.String.Hello;
 			global::DynamicExpresso.Android.Resource.String.ApplicationName = global::BNC0D3.Resource.String.ApplicationName;
 			global::DynamicExpresso.Android.Resource.String.Hello = global::BNC0D3.Resource.String.Hello;
-			global::Splat.Resource.String.library_name = global::BNC0D3.Resource.String.library_name;
 		}
 		
 		public partial class Array
@@ -375,14 +374,14 @@ namespace BNC0D3
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f040002
-			public const int ApplicationName = 2130968578;
-			
 			// aapt resource value: 0x7f040001
-			public const int Hello = 2130968577;
+			public const int ApplicationName = 2130968577;
 			
 			// aapt resource value: 0x7f040000
-			public const int library_name = 2130968576;
+			public const int Hello = 2130968576;
+			
+			// aapt resource value: 0x7f040002
+			public const int library_name = 2130968578;
 			
 			// aapt resource value: 0x7f040003
 			public const int opcode_prompt = 2130968579;

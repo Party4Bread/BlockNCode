@@ -90,8 +90,8 @@ namespace BreadMachine.Android
             var ccstck = codestack.Pop();
             if (ccstck.codeList.Count == 0)
                 return null;
-            int prevcnt = 0;
-            for (int i = 0; i < 2; i++)//for safe
+            int prevcnt = -1; 
+            //for (int i = 0; i < 2; i++)//for safe
             {
                 while (prevcnt != codestack.Count)
                 {

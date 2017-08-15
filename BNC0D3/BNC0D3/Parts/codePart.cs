@@ -13,7 +13,7 @@ using Android.Widget;
 
 namespace BNC0D3.Parts
 {
-    public class codePart : FlowPart ,IList<FlowPart>
+    public class codePart : FlowPart, IList<FlowPart>
     {
         public List<FlowPart> code;
 
@@ -24,18 +24,27 @@ namespace BNC0D3.Parts
 
         public codePart(string xml)
         {
+            code = new List<FlowPart>();
             XmlDocument a = new XmlDocument();
             a.LoadXml(xml);
-            foreach (XmlNode i in a.ChildNodes)
+            foreach (XmlNode i in a.ChildNodes[0].ChildNodes)
             {
                 switch (i.Name)
                 {
                     case "def":
-                        code.Add(new definePart(i.OuterXml));
+                        code.Add(new definePart(i.Attributes["type"].Value=="0"?DefType.Number:DefType.String,i.InnerText,i.Attributes["value"].Value));
                         break;
                     case "calc":
+                        code.Add(new calculationPart(i.InnerText));
                         break;
                     case "loop":
+                        code.Add(new loopPart(i.OuterXml));
+                        break;
+                    case "sel":
+                        code.Add(new conditionalPart(i.OuterXml));
+                        break;
+                    case "ivk":
+                        code.Add(new optPart(i.InnerText));
                         break;
                     case "break":
                         break;
@@ -55,12 +64,19 @@ namespace BNC0D3.Parts
         {
             ((IList<FlowPart>)code).Add(item);
         }
-
         public void Clear()
         {
             ((IList<FlowPart>)code).Clear();
         }
-
+        public void Concats(codePart item)
+        {
+            code.Concat(item.code);
+        }
+        public static codePart operator +(codePart c1, codePart c2)
+        {
+            c1.code.AddRange(c2.code);
+            return c1;
+        }
         public bool Contains(FlowPart item)
         {
             return ((IList<FlowPart>)code).Contains(item);
