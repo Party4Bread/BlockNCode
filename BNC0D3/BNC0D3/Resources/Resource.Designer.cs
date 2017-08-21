@@ -195,17 +195,17 @@ namespace BNC0D3
 			// aapt resource value: 0x7f06000b
 			public const int conok_button = 2131099659;
 			
-			// aapt resource value: 0x7f060029
-			public const int consoleIpt = 2131099689;
-			
-			// aapt resource value: 0x7f060028
-			public const int consoleOpt = 2131099688;
+			// aapt resource value: 0x7f06002b
+			public const int consoleIpt = 2131099691;
 			
 			// aapt resource value: 0x7f06002a
-			public const int consoleSummit = 2131099690;
+			public const int consoleOpt = 2131099690;
 			
-			// aapt resource value: 0x7f060025
-			public const int content = 2131099685;
+			// aapt resource value: 0x7f06002c
+			public const int consoleSummit = 2131099692;
+			
+			// aapt resource value: 0x7f060027
+			public const int content = 2131099687;
 			
 			// aapt resource value: 0x7f06000f
 			public const int defBack = 2131099663;
@@ -213,8 +213,8 @@ namespace BNC0D3
 			// aapt resource value: 0x7f060010
 			public const int defRoot = 2131099664;
 			
-			// aapt resource value: 0x7f060024
-			public const int def_button = 2131099684;
+			// aapt resource value: 0x7f060026
+			public const int def_button = 2131099686;
 			
 			// aapt resource value: 0x7f060008
 			public const int deletebtn = 2131099656;
@@ -234,26 +234,35 @@ namespace BNC0D3
 			// aapt resource value: 0x7f06000e
 			public const int gridView2 = 2131099662;
 			
-			// aapt resource value: 0x7f060026
-			public const int handle = 2131099686;
+			// aapt resource value: 0x7f060028
+			public const int handle = 2131099688;
 			
 			// aapt resource value: 0x7f060002
 			public const int horizontalScrollView1 = 2131099650;
 			
-			// aapt resource value: 0x7f06002b
-			public const int linearLayout1 = 2131099691;
+			// aapt resource value: 0x7f060031
+			public const int imageButton1 = 2131099697;
 			
-			// aapt resource value: 0x7f060023
-			public const int load_button = 2131099683;
+			// aapt resource value: 0x7f06001d
+			public const int lecturebtn = 2131099677;
+			
+			// aapt resource value: 0x7f06001f
+			public const int lecturegrid = 2131099679;
+			
+			// aapt resource value: 0x7f06002d
+			public const int linearLayout1 = 2131099693;
+			
+			// aapt resource value: 0x7f060025
+			public const int load_button = 2131099685;
+			
+			// aapt resource value: 0x7f060022
+			public const int loadingImage = 2131099682;
 			
 			// aapt resource value: 0x7f060020
-			public const int loadingImage = 2131099680;
+			public const int loadingProgressBar = 2131099680;
 			
-			// aapt resource value: 0x7f06001e
-			public const int loadingProgressBar = 2131099678;
-			
-			// aapt resource value: 0x7f060021
-			public const int loadingProgressWheel = 2131099681;
+			// aapt resource value: 0x7f060023
+			public const int loadingProgressWheel = 2131099683;
 			
 			// aapt resource value: 0x7f060005
 			public const int loop_button = 2131099653;
@@ -261,8 +270,8 @@ namespace BNC0D3
 			// aapt resource value: 0x7f060004
 			public const int opt_button = 2131099652;
 			
-			// aapt resource value: 0x7f06001d
-			public const int optbtn = 2131099677;
+			// aapt resource value: 0x7f06001e
+			public const int optbtn = 2131099678;
 			
 			// aapt resource value: 0x7f06001c
 			public const int playbtn = 2131099676;
@@ -270,26 +279,26 @@ namespace BNC0D3
 			// aapt resource value: 0x7f060017
 			public const int radioGroup1 = 2131099671;
 			
-			// aapt resource value: 0x7f060022
-			public const int save_button = 2131099682;
+			// aapt resource value: 0x7f060024
+			public const int save_button = 2131099684;
 			
-			// aapt resource value: 0x7f06002d
-			public const int scSwitch = 2131099693;
+			// aapt resource value: 0x7f06002f
+			public const int scSwitch = 2131099695;
 			
 			// aapt resource value: 0x7f060009
 			public const int scrollView1 = 2131099657;
 			
-			// aapt resource value: 0x7f060027
-			public const int slidingDrawer1 = 2131099687;
-			
-			// aapt resource value: 0x7f06002c
-			public const int textView1 = 2131099692;
+			// aapt resource value: 0x7f060029
+			public const int slidingDrawer1 = 2131099689;
 			
 			// aapt resource value: 0x7f06002e
-			public const int textView2 = 2131099694;
+			public const int textView1 = 2131099694;
 			
-			// aapt resource value: 0x7f06001f
-			public const int textViewStatus = 2131099679;
+			// aapt resource value: 0x7f060030
+			public const int textView2 = 2131099696;
+			
+			// aapt resource value: 0x7f060021
+			public const int textViewStatus = 2131099681;
 			
 			// aapt resource value: 0x7f060011
 			public const int varAddbtn = 2131099665;
@@ -344,22 +353,25 @@ namespace BNC0D3
 			public const int Launcher = 2130903045;
 			
 			// aapt resource value: 0x7f030006
-			public const int loading = 2130903046;
+			public const int Lecture = 2130903046;
 			
 			// aapt resource value: 0x7f030007
-			public const int loadingimage = 2130903047;
+			public const int loading = 2130903047;
 			
 			// aapt resource value: 0x7f030008
-			public const int loadingprogress = 2130903048;
+			public const int loadingimage = 2130903048;
 			
 			// aapt resource value: 0x7f030009
-			public const int loopSetting = 2130903049;
+			public const int loadingprogress = 2130903049;
 			
 			// aapt resource value: 0x7f03000a
-			public const int Main = 2130903050;
+			public const int loopSetting = 2130903050;
 			
 			// aapt resource value: 0x7f03000b
-			public const int userPref = 2130903051;
+			public const int Main = 2130903051;
+			
+			// aapt resource value: 0x7f03000c
+			public const int userPref = 2130903052;
 			
 			static Layout()
 			{

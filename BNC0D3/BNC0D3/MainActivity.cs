@@ -82,7 +82,54 @@ namespace BNC0D3
             codeBlock = new codePart();
             varList = new List<variable>();
             #endregion
+            try
+            {
+                string uri = Intent.GetStringExtra("lecture");
+                Android.Media.MediaPlayer mp = new Android.Media.MediaPlayer();
+                mp.SetAudioStreamType(Android.Media.Stream.Music);
+                mp.SetDataSource(uri);
+                mp.Prepare();
+                //mp.Start();
+                GridLayout.LayoutParams glpr = new GridLayout.LayoutParams();
+                glpr.Height = width / 5;
+                glpr.Width = width / 5; 
+                ImageButton ctrlmpbtn = new ImageButton(this);
+                ctrlmpbtn.SetImageDrawable(GetDrawable(Android.Resource.Drawable.IcMediaPlay));
+                ctrlmpbtn.SetBackgroundColor(new Color(255,255,255));
+                ctrlmpbtn.LayoutParameters = glpr;
+                ctrlmpbtn.Tag = "pa";
+                ctrlmpbtn.Click+=(sender, evtargs) => {
+                    if(ctrlmpbtn.Tag.ToString() == "pa")
+                    {
+                        mp.Start();
+                        ctrlmpbtn.SetImageDrawable(GetDrawable(Android.Resource.Drawable.IcMediaPause));
+                        ctrlmpbtn.Tag = "pl";
+                    }
+                    else if(ctrlmpbtn.Tag.ToString() == "re")
+                    {
+                        mp.Prepare();
+                        mp.Start();
+                        ctrlmpbtn.SetImageDrawable(GetDrawable(Android.Resource.Drawable.IcMediaPause));
+                        ctrlmpbtn.Tag = "pl";
+                    }
+                    else
+                    {
+                        mp.Pause();
+                        ctrlmpbtn.SetImageDrawable(GetDrawable(Android.Resource.Drawable.IcMediaPlay));
+                        ctrlmpbtn.Tag = "pa";
+                    }
+                };
+                mp.Completion += (sender,evtargs)=> {
+                    mp.Stop();
+                    ctrlmpbtn.SetImageDrawable(GetDrawable(Android.Resource.Drawable.IcMenuRotate));
+                    ctrlmpbtn.Tag = "re";
+                    Toast.MakeText(this, "강좌가 끝났습니다. 다시 듣고 싶으면 다시재생버튼을 누르세요",ToastLength.Long).Show();
+                };
+                gridflow.AddView(ctrlmpbtn);
+            }
+            catch (Exception) {
 
+            }
             #region COMPONENT_EVENT
             conIpt.EditorAction += ConIpt_EditorAction;
             slider.DrawerOpen += Slider_DrawerOpen;
@@ -107,6 +154,7 @@ namespace BNC0D3
             };
             ll.AddView(delb);*/
         }
+        
 
         private void Constbtn_Click(object sender, EventArgs e)
         {

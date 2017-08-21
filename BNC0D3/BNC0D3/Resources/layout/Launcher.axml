@@ -13,6 +13,14 @@
         android:background="#03EBA6"
         android:textSize="120dip" />
     <Button
+        android:text="Learn!"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lecturebtn"
+        android:layout_weight="1"
+        android:background="#D24BA6"
+        android:textSize="110dip" />
+    <Button
         android:text="Option"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
