@@ -18,7 +18,7 @@ using Android.Graphics.Drawables;
 
 namespace BNC0D3
 {
-    [Activity(Label = "LectureActivity")]
+    [Activity(Label = "LectureActivity", Theme = "@android:style/Theme.NoTitleBar")]
     public class LectureActivity : Activity
     {
         protected override void OnCreate(Bundle savedInstanceState)
@@ -62,8 +62,8 @@ namespace BNC0D3
                 lp.SetMargins(0, 0, 0, 0);
                 int rbpar = i * 16<255? i * 16:255, gpar = rbpar==255?255-i:255;
                 GradientDrawable gd = new GradientDrawable();
-                gd.SetStroke(1,new Android.Graphics.Color(0,0,0));
-                gd.SetCornerRadius(5);
+                gd.SetStroke(5,new Android.Graphics.Color(0,0,0));
+                gd.SetCornerRadius(10);
                 gd.SetColor(new Android.Graphics.Color(rbpar, gpar, rbpar));
                 lbtn.SetBackgroundDrawable(gd);
                 

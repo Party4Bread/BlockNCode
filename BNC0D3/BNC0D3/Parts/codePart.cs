@@ -35,7 +35,10 @@ namespace BNC0D3.Parts
                         code.Add(new definePart(i.Attributes["type"].Value=="0"?DefType.Number:DefType.String,i.InnerText,i.Attributes["value"].Value));
                         break;
                     case "calc":
-                        code.Add(new calculationPart(i.InnerText));
+                        int locationOfequal = i.InnerText.IndexOf('=');
+                        string formul= i.InnerText.Substring(locationOfequal + 1, i.InnerText.Length - locationOfequal - 1) + "="
+                            + i.InnerText.Substring(0, locationOfequal);
+                        code.Add(new calculationPart(formul));
                         break;
                     case "loop":
                         code.Add(new loopPart(i.OuterXml));
@@ -51,6 +54,7 @@ namespace BNC0D3.Parts
                     default:
                         break;
                 }
+                code.Last().index = code.Count-1;
             }
         }
 

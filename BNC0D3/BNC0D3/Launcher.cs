@@ -25,8 +25,9 @@ namespace BNC0D3
                 
             };
             optbtn.Click += delegate {
-                StartActivity(typeof(userPref));
-                OverridePendingTransition(Android.Resource.Animation.SlideInLeft, Android.Resource.Animation.SlideOutRight);
+                Toast.MakeText(this, "아직 개발중입니다! 응원해주세요!", ToastLength.Long);
+                //StartActivity(typeof(userPref));
+                //OverridePendingTransition(Android.Resource.Animation.SlideInLeft, Android.Resource.Animation.SlideOutRight);
             };
             lecturebtn.Click += delegate
             {

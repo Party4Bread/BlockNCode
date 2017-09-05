@@ -118,21 +118,21 @@ namespace BNC0D3
                                     delb.SetTextColor(Color.Rgb(0, 0, 0));
                                     delb.Click += delegate
                                     {
-                                        currentBlock.RemoveAt(index);
+                                        codeBlock.RemoveAt(index);
                                         currentGrid.RemoveViewAt(index);
                                         dialogger.Cancel();
                                     };
                                     ll.AddView(delb);
                                     dialog.SetView(la);
                                     EditText formTb = (EditText)la.FindViewById(Resource.Id.formular);
-                                    formTb.Text = ((calculationPart)(currentBlock[index])).formula;
+                                    formTb.Text = ((calculationPart)(codeBlock[index])).formula;
                                     dialog.SetPositiveButton(Android.Resource.String.Ok, delegate
                                     {
                                         try
                                         {
                                             string form = formTb.Text;
                                             checkFormular(varList, formTb.Text);
-                                            currentBlock[index] = new calculationPart(formula);
+                                            codeBlock[index] = new calculationPart(formula);
                                         }
                                         catch (Exception ee)
                                         {
@@ -142,7 +142,7 @@ namespace BNC0D3
                                     dialogger = dialog.Create();
                                     dialogger.Show();
                                 };
-                                currentBlock.Add(fp);
+                                codeBlock.Add(fp);
                                 currentGrid.AddView(calcflow);
                             }
                             catch (Exception ee)

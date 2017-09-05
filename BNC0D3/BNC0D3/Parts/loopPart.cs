@@ -26,12 +26,13 @@ namespace BNC0D3.Parts
         {
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xml);
-            if(doc.Name!="loop")
+            
+            if(doc.FirstChild.Name!="loop")
             {
                 throw new Exception("XML이 형식에 맞지 않습니다.");
             }
-            condition=doc.Attributes["con"].Value;
-            codeinloop = new codePart(doc.InnerXml);
+            condition= doc.FirstChild.Attributes["con"].Value;
+            codeinloop = new codePart(doc.FirstChild.InnerXml);
         }
         public override string Digest()
         {

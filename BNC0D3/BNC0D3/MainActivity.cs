@@ -174,7 +174,7 @@ namespace BNC0D3
             if (requestCode == 200)
             {
                 var _uri = data.Data;
-                string filePath = _uri.Path.Replace("/file/file","");
+                string filePath = _uri.Path.Replace("/file","");
                 XmlDocument loaddoc = new XmlDocument();
                 codeBlock = new codePart();
                 gridflow.RemoveAllViews();
@@ -195,6 +195,8 @@ namespace BNC0D3
                             codePart currentBlock = codeBlock;
                             GridLayout currentGrid = gridflow;
                             string formula = (i as calculationPart).formula;
+                            int locationOfequal = formula.IndexOf('=');
+                            formula= formula.Substring(locationOfequal + 1, formula.Length - locationOfequal - 1) + "=" + formula.Substring(0, locationOfequal);
                             FlowPart fp = i;
                             fp.compoId = View.GenerateViewId();
                             fp.index = codeBlock.Count;
@@ -559,8 +561,8 @@ namespace BNC0D3
                 }
 
                 //varCode.(codeBlock);
-                codeBlock = varCode+codeBlock;
-                foreach (FlowPart i in codeBlock)
+                var tempcodeBlock = varCode+codeBlock;
+                foreach (FlowPart i in tempcodeBlock)
                 {
                     cd.AppendChild(i.XmlDigest(code));
                 }
@@ -833,8 +835,8 @@ namespace BNC0D3
                 {
                     varCode.Add(new definePart(i.type == type.letter ? DefType.String : DefType.Number, i.name, i.value.ToString()));
                 }
-                codeBlock = varCode + codeBlock;
-                foreach (FlowPart i in codeBlock)
+                var tempcodeBlock = varCode + codeBlock;
+                foreach (FlowPart i in tempcodeBlock)
                 {
                     cd.AppendChild(i.XmlDigest(code));
                 }
