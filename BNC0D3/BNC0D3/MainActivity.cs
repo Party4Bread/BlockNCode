@@ -589,30 +589,33 @@ namespace BNC0D3
             LinearLayout ll = layout.FindViewById<LinearLayout>(Resource.Id.defRoot);
 
             #region addExistingVars
-            foreach (var i in varList)
+            for (int idx = 0; idx < varList.Count; idx++)
             {
+                var i = varList[idx];
+
                 var vl = LayoutInflater.Inflate(Resource.Layout.defVarFrag, null);
                 vl.Id = i.id;
                 TextView varName = vl.FindViewById<TextView>(Resource.Id.varNameFrag);
                 TextView varValue = vl.FindViewById<TextView>(Resource.Id.varValueFrag);
                 TextView varType = vl.FindViewById<TextView>(Resource.Id.varTypeFrag);
                 Button delBtn = vl.FindViewById<Button>(Resource.Id.varDelFragBtn);
+                delBtn.Tag = newVal.Count + ',' + ll.ChildCount;
                 varName.Text = i.name;
                 varValue.Text = i.value.ToString();
                 if (i.type == type.letter)
                     varType.Text = "문자";
                 else
                     varType.Text = "숫자";
-                delBtn.Click += delegate
-                {
-                    
-                    //EVENT who is the the del 
+
+                delBtn.Click += (sendefd, evsned) => {
+                    varList.RemoveAt(int.Parse((sendefd as Button).Tag.ToString().Split(',')[0]));
+                    ll.RemoveViewAt(int.Parse((sendefd as Button).Tag.ToString().Split(',')[1]));
                 };
 
                 //아이디지정된 엘리먼트에 값추가.--- 기억:이건 있던 변수 추가하는것뿐
 
                 ll.AddView(vl);
-            } 
+            }
             #endregion
             Button addValBtn = layout.FindViewById<Button>(Resource.Id.varAddbtn);
             addValBtn.Click += delegate {
@@ -635,6 +638,7 @@ namespace BNC0D3
                     TextView vvarValue = dVF.FindViewById<TextView>(Resource.Id.varValueFrag);
                     TextView vvarType = dVF.FindViewById<TextView>(Resource.Id.varTypeFrag);
                     Button vdelBtn = dVF.FindViewById<Button>(Resource.Id.varDelFragBtn);
+                    vdelBtn.Tag = newVal.Count + ',' + ll.ChildCount;
                     vvarName.Text = nv.name = newvarname.Text;
                     vvarValue.Text = (string)(nv.value = newvarvalue.Text);
                     if (nstr.Checked == true)
@@ -647,8 +651,9 @@ namespace BNC0D3
                         vvarType.Text = "숫자";
                         nv.type = type.number;
                     }
-                    vdelBtn.Click += delegate {
-                        //EVENT who is the the del 
+                    vdelBtn.Click += (sendefd, evsned) => {
+                        newVal.RemoveAt(int.Parse((sendefd as Button).Tag.ToString().Split(',')[0]));
+                        ll.RemoveViewAt(int.Parse((sendefd as Button).Tag.ToString().Split(',')[1]));
                     };
                     ll.AddView(dVF);
                     newVal.Add(nv);
@@ -657,18 +662,18 @@ namespace BNC0D3
                 AlertDialog dlgr = dlg.Create();
                 dlgr.Show();
             };
-  
+
             dialog.SetView(layout);
             dialog.SetPositiveButton(Android.Resource.String.Ok, (sender, e) => {
                 List<variable> oldvariable = varList;
                 varList = new List<variable>();
-                foreach(variable ov in oldvariable)
+                foreach (variable ov in oldvariable)
                 {
                     variable sv = new variable();
                     sv.name = ll.FindViewById<LinearLayout>(ov.id).FindViewById<TextView>(Resource.Id.varNameFrag).Text;
                     sv.value = ll.FindViewById<LinearLayout>(ov.id).FindViewById<TextView>(Resource.Id.varValueFrag).Text;
-                    sv.type = ll.FindViewById<LinearLayout>(ov.id).FindViewById<TextView>(Resource.Id.varTypeFrag).Text=="숫자" ? type.number : type.letter;
-                    sv.id  = ov.id;
+                    sv.type = ll.FindViewById<LinearLayout>(ov.id).FindViewById<TextView>(Resource.Id.varTypeFrag).Text == "숫자" ? type.number : type.letter;
+                    sv.id = ov.id;
                     bool isExist = false;
                     varList.ForEach((variable v) => {
                         if (v.name == sv.name)
@@ -683,7 +688,7 @@ namespace BNC0D3
                         // Toast 문제있소!
                     }
                 }
-                foreach(variable nv in newVal)
+                foreach (variable nv in newVal)
                 {
                     variable sv = nv;
                     //ToDo:error fix
@@ -696,7 +701,7 @@ namespace BNC0D3
                         if (v.name == sv.name)
                             isExist = true;
                     });
-                    if (sv.name != "" && (string)sv.value!="" && !isExist)
+                    if (sv.name != "" && (string)sv.value != "" && !isExist)
                     {
                         varList.Add(sv);
                     }
@@ -814,7 +819,7 @@ namespace BNC0D3
             //완료 이벤트 개발 우선순위 1 변수초기화후 새로 다시추가 2 사용된 변수인지 체크
             dialogger = dialog.Create();
             dialogger.Show();
-            
+
         }
 
         private void Slider_DrawerOpen(object sender, EventArgs e)
